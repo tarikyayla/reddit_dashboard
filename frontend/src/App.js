@@ -1,18 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
 
 function App() {
-
-  const dummyRequest = () =>{
+  const dummyRequest = () => {
     fetch("/api/hello")
-    .then((resp)=>{return resp.json()})
-    .then((data)=>{console.log("SELAMÜN ALEYKÜM ASLAN PARÇASI")});
-  }
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((data) => {
+        console.log("SELAMÜN ALEYKÜM ASLAN PARÇASI");
+      });
+  };
 
   dummyRequest();
 
-  
+  function asd(e) {
+    console.log("1");
+  }
+  asd();
 
   return (
     <div className="App">
