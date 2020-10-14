@@ -1,7 +1,7 @@
 from django.urls import path
-from api import views
+from api.views.public import api_check
 
 
 urlpatterns = [
-    path("hello/", views.hello),
+    path("hello/", api_check),
 ]
