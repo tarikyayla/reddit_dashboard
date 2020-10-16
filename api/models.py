@@ -7,6 +7,8 @@ class Subreddit(models.Model):
     name = models.CharField(max_length=100)
     url = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
+    subscribers = models.BigIntegerField(default=0)
+    description = models.TextField()
     added_date = models.DateField(auto_now=True)
     added_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     last_checked_date = models.DateTimeField()
