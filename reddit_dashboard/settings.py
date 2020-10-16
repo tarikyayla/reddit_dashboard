@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,8 +26,10 @@ SECRET_KEY = '0bw=q9^#(d)6+3tesiz*5ne_t8ao$9134j2%q@1r@=)*)55=y7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+env = environ.Env()
+environ.Env.read_env()
 
 # Application definition
 
@@ -76,10 +79,10 @@ WSGI_APPLICATION = 'reddit_dashboard.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': "u975703108_bot_test",
-        "HOST": "sql217.main-hosting.eu",
-        "USER": "u975703108_tarikyayla",
-        "PASSWORD": "Ba6:Lw!5"
+        'NAME': env("DB_NAME"),
+        "HOST": env("DB_HOST"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD")
     }
 }
 
@@ -121,3 +124,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# PRAW CONFIGURATION
+PRAW_CLIENT_ID = env("PRAW_CLIENT_ID")
+PRAW_SECRET = env("PRAW_SECRET")
+PRAW_USER_AGENT = env("PRAW_USER_AGENT")
+
+# DISCORD CONFIGURATION
+
