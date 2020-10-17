@@ -2,6 +2,7 @@ import praw
 from praw.exceptions import PRAWException
 from django.conf import settings
 from api.models import Subreddit
+from django.contrib.auth.models import AbstractUser
 
 class RedditManager:
     instance = None
