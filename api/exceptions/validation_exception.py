@@ -7,9 +7,8 @@ class ValidationException(APIException):
     reason = ""
 
     def __init__(self, key, reason, status_code=500):
-        self.reason = reason
-        self.validation_key = key
         self.status_code = status_code
+        self.detail = {"success": False, "reason": reason, "key": key}
 
 
 
