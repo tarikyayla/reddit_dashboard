@@ -15,10 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from reddit_dashboard.views import dashboard
+from reddit_dashboard.views import dashboard,reddit_callback
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", dashboard),
-    path('api/', include('api.urls'))
+    path('api/', include('api.urls')),
+    path('reddit_redict_url/', reddit_callback)
 ]
