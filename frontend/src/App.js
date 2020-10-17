@@ -1,6 +1,7 @@
 import React from "react";
 
-import SignIn from "./components/SignIn";
+// import SignIn from "./components/SignIn";
+import Reddit from "./components/Dashboard/Reddit";
 
 function App() {
   const dummyRequest = () => {
@@ -17,7 +18,7 @@ function App() {
 
   return (
     <div>
-      <SignIn />
+      <Reddit />
     </div>
   );
 }

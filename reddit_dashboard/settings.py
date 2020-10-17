@@ -13,7 +13,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import environ
 import os
+import logging
 
+logging.Logger(name="reddit_dashboard")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -146,6 +148,6 @@ STATICFILES_DIRS = [
 PRAW_CLIENT_ID = env("PRAW_CLIENT_ID")
 PRAW_SECRET = env("PRAW_SECRET")
 PRAW_USER_AGENT = env("PRAW_USER_AGENT")
-
+PRAW_REDIRECT_URL = "http://localhost:8000/reddit_redict_url"
 # DISCORD CONFIGURATION
 
