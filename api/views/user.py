@@ -3,13 +3,16 @@ from rest_framework import status
 from rest_framework.views import APIView
 from api.serializers.user_serializers import LoginSerializer, RegisterSerializer
 from api.responses import SUCCESS_RESPONSE, FAIL_RESPONSE
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import authenticate
 from api.exceptions.validation_exception import ValidationException
 from api.permissions import OnlyAnon
+from api.authentications import CsrfExemptSessionAuthentication
 
 
 class Login(APIView):
     permission_classes = [OnlyAnon]
+    authentication_classes = [CsrfExemptSessionAuthentication]
+
 
     def get(self, request, format=None):
         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -29,6 +32,7 @@ class Login(APIView):
 
 class Register(APIView):
     permission_classes = [OnlyAnon]
+    authentication_classes = [CsrfExemptSessionAuthentication]
 
     def post(self, request):
         if request.user.is_authenticated:
