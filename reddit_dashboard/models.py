@@ -10,6 +10,7 @@ class DashboardUser(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
     reddit_user_data = models.TextField(blank=True, null=True)
     reddit_user_id = models.CharField(blank=True, null=True, max_length=255)
+    reddit_username = models.CharField(blank=True, null=True, max_length=255)
 
     USERNAME_FIELD = 'username'
 
