@@ -1,58 +1,51 @@
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 from api.exceptions.validation_exception import ValidationException
 from django.contrib.auth import login, authenticate, checks
-from django.contrib.auth.models import User
+from reddit_dashboard.models import DashboardUser
 
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True, min_length=6)
 
-    def validate(self, attrs):
-        super(LoginSerializer, self).validate(self, attrs)
-
-        if self.is_valid():
-            user = authenticate(username=self.username, password=self.password)
-            if not user:
-                raise ValidationError("Username or password incorrect")
-
-    def login(self, request):
-        user = authenticate(username=self.username, password=self.password)
+    def login(self, request, user):
         if user:
             login(request, user)
 
 
 class RegisterSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True,)
+    username = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
     passwordRe = serializers.CharField(required=True)
     email = serializers.EmailField(required=True)
 
-    def validate(self, attrs):
-        super().validate(self, attrs)
-        if self.password != self.passwordRe:
-            raise ValidationError("Passwords do not match")
+    def validate_password(self, value):
+        if value != self.initial_data["passwordRe"]:
+            raise ValidationException("password", "Passwords dont match")
+        return value
 
-        validation_list = ["username", "email", "discord_server"]
+    def validate(self, attrs):
+        super(RegisterSerializer, self).validate(attrs)
+
+        validation_list = ["username", "email"]
 
         for validation in validation_list:
             self.send_validation_error(validation)
 
+        return attrs
+
     def create(self, validated_data):
-        user = User(username=validated_data["username"],
-                    password=validated_data["password"],
-                    email=validated_data["email"])
+        user = DashboardUser.objects.create_user(username=validated_data["username"],
+                                                 password=validated_data["password"],
+                                                 email=validated_data["email"])
 
         user.save()
 
-
-
     def send_validation_error(self, attr):
         filter_dict = {}
-        value = getattr(self, attr)
+        value = self.initial_data.get(attr)
         filter_dict[attr] = value
-        user = User.objects.filter(**filter_dict)
+        user = DashboardUser.objects.filter(**filter_dict)
         if user:
             raise ValidationException(attr, reason=f"{attr} already exist")
 
