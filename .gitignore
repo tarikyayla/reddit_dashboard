@@ -18,3 +18,4 @@ venv/
 .vscode/
 .idea/
 *.env 
+static/
