@@ -9,6 +9,7 @@ $ pip install virtualenv --user
 $ virtualenv venv 
 $ venv\Scripts\activate
 $ pip install -r requirements.txt # Gerekli kütüphaneleri yükler.
+$ python manage.py collectstatic # static dosyalarını toplar
 $ python manage.py runserver # Sunucuyu ayağa kaldırır. 
 ```
 
