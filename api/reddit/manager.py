@@ -3,6 +3,7 @@ from praw.exceptions import PRAWException
 from django.conf import settings
 from api.models import Subreddit
 
+
 class RedditManager:
     instance = None
     def __init__(self):
@@ -40,7 +41,3 @@ class RedditManager:
 
     def get_user_subreddits(self, user_id):
         pass
-
-
-# TODO Reddit Auth2
-# get user
