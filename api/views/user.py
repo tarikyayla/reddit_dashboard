@@ -8,16 +8,16 @@ from django.contrib.auth import authenticate
 from api.exceptions.validation_exception import ValidationException
 from api.permissions import OnlyAnon
 from api.authentications import CsrfExemptSessionAuthentication
-
+from django.contrib.auth.decorators import login_required
+from api.reddit.manager import reddit_manager
+from reddit_dashboard.models import DashboardUser
+from reddit_dashboard import logger
 
 class Login(APIView):
     permission_classes = [OnlyAnon]
     authentication_classes = [CsrfExemptSessionAuthentication]
 
-    def get(self, request, format=None):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    def post(self, request,  format=None):
+    def post(self, request):
         if request.user.is_authenticated:
             return FAIL_RESPONSE
         serializer = LoginSerializer(data=request.data)
@@ -44,9 +44,26 @@ class Register(APIView):
         return FAIL_RESPONSE
 
 
+@login_required
 @api_view(["GET"])
-def get_auth_link(request):
-    pass
+def get_subreddits(request):
+    try:
+        subreddits = reddit_manager.get_user_subreddits(user=request.user)
+        DashboardUser.add_subreddits_to_user(subreddits)
+        return SUCCESS_RESPONSE
+    except Exception as ex:
+        logger.error(str(ex))
+        return FAIL_RESPONSE
+
+
+
+
+
+
+
+
+
+
 
 
 
