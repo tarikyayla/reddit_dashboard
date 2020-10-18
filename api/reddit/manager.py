@@ -1,7 +1,7 @@
 import praw
 from praw.exceptions import PRAWException
 from django.conf import settings
-from api.models import Subreddit
+from reddit_dashboard.models import Subreddit
 from reddit_dashboard.models import DashboardUser
 import json
 
@@ -41,18 +41,15 @@ class RedditManager:
         subreddit_object.save()
         return subreddit_object
 
-
-    def get_user_subreddits(self, user_id):
-        pass
-
     def get_refresh_token(self, code):
         return self.instance.auth.authorize(code)
 
     def get_auth_link(self, username):
         return self.instance.auth.url(["identity", "mysubreddits"], username, "permanent")
 
-    def get_user_instance(self, user=None, username=None, refresh_token=None):
-        if not user:
+    @staticmethod
+    def get_user_instance(user=None, username=None, refresh_token=None):
+        if not user and not refresh_token:
             user = DashboardUser.objects.get(username=username)
 
         if not refresh_token:
@@ -74,9 +71,18 @@ class RedditManager:
             instance = self.get_user_instance(user=user)
 
         user.reddit_user_data = json.dumps(instance.user.me().subreddit)
-        user.save() # save changes
+        user.save()  # save changes
 
         return user.reddit_user_data
+
+    def get_user_subreddits(self, user=None, username=None):
+        if not user:
+            user = DashboardUser.objects.get(username=username)
+
+        return self.get_user_instance(user=user).user.subreddits()
+
+
+
 
 
 
