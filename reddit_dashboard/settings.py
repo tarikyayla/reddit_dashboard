@@ -86,20 +86,34 @@ WSGI_APPLICATION = 'reddit_dashboard.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': env("DB_NAME"),
-        "HOST": env("DB_HOST"),
-        "USER": env("DB_USER"),
-        "PASSWORD": env("DB_PASSWORD")
+
+DATABASE_ENGINE = {
+    "MYSQL": {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': env("DB_NAME"),
+            "HOST": env("DB_HOST"),
+            "USER": env("DB_USER"),
+            "PASSWORD": env("DB_PASSWORD")
+        }
+    },
+    "SQLITE": {
+        "default": {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'dashboard.db'
+        }
     }
 }
 
+
+DATABASES = DATABASE_ENGINE["SQLITE"]
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',  # <-- And here
+        'rest_framework.authentication.TokenAuthentication',
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 20
 }
 
 
