@@ -8,6 +8,11 @@ def get_default_user_token():
     token = None
     if not user:
         user = DashboardUser.objects.create_user(username=settings.USERNAME, password=settings.PASSWORD)
+        user.is_active = True
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+
     token = Token.objects.get_or_create(user=user)
     
     return "Token " + str(token[0])

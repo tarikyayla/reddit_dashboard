@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, UserManager
 from django.db import models
 from django.utils.timezone import now
 
+
 class DashboardUser(AbstractBaseUser):
     email = models.EmailField(unique=True)
     username = models.CharField(unique=True, max_length=255)
@@ -23,9 +24,9 @@ class DashboardUser(AbstractBaseUser):
             self.add_subreddit_to_user(subreddit)
 
     def add_subreddit_to_user(self, subreddit):
-        sub = Subreddit.objects.filter(name=subreddit.display_name)
+        sub = Subreddit.objects.filter(name=subreddit.display_name).first()
         if not sub:
-            subreddit = Subreddit(
+            sub = Subreddit(
                 name=subreddit.display_name,
                 url=subreddit.url,
                 description=subreddit.description_html,
@@ -33,14 +34,26 @@ class DashboardUser(AbstractBaseUser):
                 subscribers=subreddit.subscribers,
                 type=subreddit.subreddit_type,
                 last_checked_date=now(),
+                banner_img=subreddit.banner_img,
+                icon_img=subreddit.icon_img,
+                over18=subreddit.over18
             )
-            subreddit.save()
-        exist = self.subreddits.filter(name=subreddit.display_name)
+            sub.save()
+        exist = self.subreddits.filter(name=sub.name).first()
         if not exist:
             self.subreddits.add(sub)
             self.save()
 
 
+    def has_perm(self, perm, obj=None):
+        return self.is_admin
+
+    def has_module_perms(self, app_label):
+        return self.is_admin
+
+    @property
+    def is_admin(self):
+        return self.is_superuser
 
 
 class Subreddit(models.Model):
@@ -52,11 +65,12 @@ class Subreddit(models.Model):
     added_date = models.DateField(auto_now=True)
     added_by = models.ForeignKey(DashboardUser, on_delete=models.DO_NOTHING)
     last_checked_date = models.DateTimeField()
+    banner_img = models.CharField(max_length=500, blank=True, null=True)
+    icon_img = models.CharField(max_length=500, blank=True, null=True)
+    over18 = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
-
-
 
 
 class DiscordServer(models.Model):
