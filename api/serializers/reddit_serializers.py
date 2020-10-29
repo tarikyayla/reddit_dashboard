@@ -5,4 +5,4 @@ from reddit_dashboard.models import Subreddit
 class SubredditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subreddit
-        fields = ["name", "url", "type", "subscribers", "description"]
+        fields = "__all__"

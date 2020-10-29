@@ -23,11 +23,3 @@ def reddit_callback(request):
         return HttpResponse("Success")
     else:
         return HttpResponseNotFound()
-
-
-
-
-
-
-
-    return redirect("/")
