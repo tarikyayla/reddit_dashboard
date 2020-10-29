@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',  # <-- Here
     'api',
     'reddit_dashboard'
 ]
@@ -93,6 +94,12 @@ DATABASES = {
         "USER": env("DB_USER"),
         "PASSWORD": env("DB_PASSWORD")
     }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # <-- And here
+    ],
 }
 
 
@@ -151,3 +158,6 @@ PRAW_USER_AGENT = env("PRAW_USER_AGENT")
 PRAW_REDIRECT_URL = "http://localhost:8000/reddit_redict_url"
 # DISCORD CONFIGURATION
 
+# USER LOGIN INFORMATION 
+USERNAME = env("LOGIN_USERNAME")
+PASSWORD = env("LOGIN_PASSWORD")
