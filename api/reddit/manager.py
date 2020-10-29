@@ -5,6 +5,7 @@ from reddit_dashboard.models import Subreddit
 from reddit_dashboard.models import DashboardUser
 import json
 
+
 class RedditManager:
     instance = None
 
@@ -70,7 +71,9 @@ class RedditManager:
                 user = DashboardUser.objects.get(username=username)
             instance = self.get_user_instance(user=user)
 
+
         user.reddit_user_data = json.dumps(instance.user.me().subreddit)
+        user.reddit_username = instance.user.me().name
         user.save()  # save changes
 
         return user.reddit_user_data
