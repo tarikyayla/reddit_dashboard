@@ -1,4 +1,8 @@
 import React from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import {
+setUser ,selectUser
+} from './userSlice';
 import {
   Button,
   Form,
@@ -9,8 +13,16 @@ import {
   Icon,
 } from "semantic-ui-react";
 
-const LoginForm = () => (
-  <Grid textAlign="center" style={{ height: "100vh" }} verticalAlign="middle">
+
+function SignIn() {
+  const user = useSelector(selectUser);
+  const dispatch = useDispatch();
+
+ const loginToApp = () => {
+   dispatch(setUser({user : "admin"}))
+ }
+  return (
+    <Grid textAlign="center" style={{ height: "100vh" }} verticalAlign="middle">
     <Grid.Column style={{ maxWidth: 450 }}>
       <Header as="h2" color="white" textAlign="center">
         <Icon name="reddit"></Icon>
@@ -31,8 +43,11 @@ const LoginForm = () => (
             placeholder="Password"
             type="password"
           />
-
-          <Button color="black" fluid size="large">
+  
+          <Button
+          onClick = {loginToApp} 
+          color="black" 
+          fluid size="large">
             Login
           </Button>
         </Segment>
@@ -42,6 +57,12 @@ const LoginForm = () => (
       </Message>
     </Grid.Column>
   </Grid>
-);
+  )
+}
 
-export default LoginForm;
+export default SignIn
+
+
+
+
+
