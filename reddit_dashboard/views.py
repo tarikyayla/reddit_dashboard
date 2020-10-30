@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import ensure_csrf_cookie
 from api.reddit.manager import reddit_manager
-from  django.http.response import HttpResponseNotFound, HttpResponse
+from  django.http.response import HttpResponseNotFound, HttpResponse, HttpResponseRedirect
 from reddit_dashboard.models import DashboardUser
 from django.conf import settings
 
@@ -19,7 +19,6 @@ def reddit_callback(request):
         user.reddit_user_id = reddit_manager.get_refresh_token(code)
         user.save()
         reddit_manager.get_user_data(user=user)
-
-        return HttpResponse("Success")
+        return HttpResponseRedirect("/")
     else:
         return HttpResponseNotFound()
