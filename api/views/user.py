@@ -1,12 +1,16 @@
 from rest_framework.views import APIView
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from api.responses import SUCCESS_RESPONSE, FAIL_RESPONSE
 from api.reddit.manager import reddit_manager
-from reddit_dashboard.models import DashboardUser
+from api.serializers import StandardResultsSetPagination
+from reddit_dashboard.models import DashboardUser, Subreddit
 from reddit_dashboard import logger
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from api.serializers.reddit_serializers import SubredditSerializer
+from django.http.response import HttpResponseNotFound
+from rest_framework.decorators import action
+
 
 class RedditAuth(APIView):
     permission_classes = [IsAuthenticated]
@@ -43,10 +47,49 @@ class RefreshSubreddits(APIView):
             return FAIL_RESPONSE(ex)
 
 
-class GetSubreddits(generics.ListAPIView):
+class Subreddits(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
+    pagination_class = StandardResultsSetPagination
     serializer_class = SubredditSerializer
 
-    def get_queryset(self):
-        return self.request.user.subreddits.all()
+    def list(self, requests):
+        queryset = requests.user.subreddits.all()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serialized_data = self.get_serializer(queryset, many=True)
+        return Response(serialized_data.data)
+
+    def retrieve(self, request, pk=None):
+        if not pk:
+            return HttpResponseNotFound()
+        obj = Subreddit.objects.filter(pk=pk).first()
+        if not obj:
+            return HttpResponseNotFound()
+
+        return Response(self.get_serializer(obj).data)
+
+    def create(self, request):
+        user = request.user
+        subreddit_id = request.data["subreddit_id"]
+        subreddit = Subreddit.objects.filter(pk=subreddit_id).first()
+
+        if not subreddit:
+            return FAIL_RESPONSE("Subreddit not exist")
+
+        request.user.add_subreddit_obj_to_user(subreddit)
+        return SUCCESS_RESPONSE
+
+    def destroy(self, request, pk=None):
+        user = request.user
+        subreddit = Subreddit.objects.filter(pk=pk).first()
+
+        if not subreddit:
+            return FAIL_RESPONSE("Subreddit not exist")
+
+        user.unfollow_subreddit(subreddit)
+        return SUCCESS_RESPONSE
+
 
