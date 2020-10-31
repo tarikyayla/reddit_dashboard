@@ -44,6 +44,26 @@ class DashboardUser(AbstractBaseUser):
             self.subreddits.add(sub)
             self.save()
 
+    def add_subreddit_obj_to_user(self, subreddit):
+        exist = self.subreddits.filter(pk=subreddit.id).first()
+
+        if not exist:
+            self.subreddits.add(subreddit)
+
+    def subreddit_exist(self, subreddit=None, subreddit_id=None):
+        if not subreddit:
+            subreddit = Subreddit.objects.filter(pk=subreddit_id).first()
+
+            if not subreddit:
+                raise Exception("Subreddit not exist!")
+
+        return self.subreddits.filter(pk=subreddit.id).first()
+
+    def unfollow_subreddit(self, subreddit):
+        exist = self.subreddit_exist(subreddit)
+
+        if exist:
+            self.subreddits.remove(exist)
 
     def has_perm(self, perm, obj=None):
         return self.is_admin
