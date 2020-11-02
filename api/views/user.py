@@ -93,3 +93,24 @@ class Subreddits(viewsets.ModelViewSet):
         return SUCCESS_RESPONSE
 
 
+class SearchSubreddit(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    pagination_class = StandardResultsSetPagination
+    serializer_class = SubredditSerializer
+
+    def get_queryset(self):
+        search_text = self.request.query_params.get("text")
+        if not search_text:
+            return []
+
+        results = reddit_manager.search_by_subreddit(search_text)
+
+        for result in results:
+            Subreddit.create(result, self.request.user)
+
+        return Subreddit.objects.filter(name__startswith=search_text)
+
+
+
+
+

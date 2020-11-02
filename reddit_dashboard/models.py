@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, UserManager
 from django.db import models
 from django.utils.timezone import now
-
+from django.conf import settings
 
 class DashboardUser(AbstractBaseUser):
     email = models.EmailField(unique=True)
@@ -91,6 +91,31 @@ class Subreddit(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def create(cls, subreddit, user=None):
+        if not user:
+            user = DashboardUser.objects.filter(username=settings.USERNAME).first()
+
+        exist = cls.objects.filter(name=subreddit.display_name).first()
+
+        if not exist:
+            exist = cls(
+                name=subreddit.display_name,
+                url=subreddit.url,
+                description=subreddit.description_html,
+                added_by=user,
+                subscribers=subreddit.subscribers,
+                type=subreddit.subreddit_type,
+                last_checked_date=now(),
+                banner_img=subreddit.banner_img,
+                icon_img=subreddit.icon_img,
+                over18=subreddit.over18
+            )
+
+            exist.save()
+
+        return exist
 
 
 class DiscordServer(models.Model):

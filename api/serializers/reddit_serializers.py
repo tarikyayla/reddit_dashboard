@@ -5,4 +5,6 @@ from reddit_dashboard.models import Subreddit
 class SubredditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subreddit
-        fields = "__all__"
+        exclude = ('description',)
+
+

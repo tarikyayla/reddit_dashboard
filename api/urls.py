@@ -13,5 +13,6 @@ urlpatterns = [
     path("get-api-token", get_api_token, name="get_api_token"),
     path("", include(router.urls)),
     path("refresh-subreddits", user.RefreshSubreddits.as_view(), name="refresh_subreddits"),
-    path("reddit-auth", user.RedditAuth.as_view(), name="reddit_auth")
+    path("reddit-auth", user.RedditAuth.as_view(), name="reddit_auth"),
+    path('search-subreddits', user.SearchSubreddit.as_view(), name='search-auth')
 ]
