@@ -71,7 +71,6 @@ class RedditManager:
                 user = DashboardUser.objects.get(username=username)
             instance = self.get_user_instance(user=user)
 
-
         user.reddit_user_data = json.dumps(instance.user.me().subreddit)
         user.reddit_username = instance.user.me().name
         user.save()  # save changes
@@ -83,10 +82,6 @@ class RedditManager:
             user = DashboardUser.objects.get(username=username)
 
         return self.get_user_instance(user=user).user.subreddits()
-
-
-
-
 
 
 reddit_manager = RedditManager() # singleton object
