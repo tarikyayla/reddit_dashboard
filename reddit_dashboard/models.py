@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, UserManager
 from django.db import models
 from django.utils.timezone import now
-
+from django.conf import settings
 
 class DashboardUser(AbstractBaseUser):
     email = models.EmailField(unique=True)
@@ -44,6 +44,26 @@ class DashboardUser(AbstractBaseUser):
             self.subreddits.add(sub)
             self.save()
 
+    def add_subreddit_obj_to_user(self, subreddit):
+        exist = self.subreddits.filter(pk=subreddit.id).first()
+
+        if not exist:
+            self.subreddits.add(subreddit)
+
+    def subreddit_exist(self, subreddit=None, subreddit_id=None):
+        if not subreddit:
+            subreddit = Subreddit.objects.filter(pk=subreddit_id).first()
+
+            if not subreddit:
+                raise Exception("Subreddit not exist!")
+
+        return self.subreddits.filter(pk=subreddit.id).first()
+
+    def unfollow_subreddit(self, subreddit):
+        exist = self.subreddit_exist(subreddit)
+
+        if exist:
+            self.subreddits.remove(exist)
 
     def has_perm(self, perm, obj=None):
         return self.is_admin
@@ -71,6 +91,31 @@ class Subreddit(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def create(cls, subreddit, user=None):
+        if not user:
+            user = DashboardUser.objects.filter(username=settings.USERNAME).first()
+
+        exist = cls.objects.filter(name=subreddit.display_name).first()
+
+        if not exist:
+            exist = cls(
+                name=subreddit.display_name,
+                url=subreddit.url,
+                description=subreddit.description_html,
+                added_by=user,
+                subscribers=subreddit.subscribers,
+                type=subreddit.subreddit_type,
+                last_checked_date=now(),
+                banner_img=subreddit.banner_img,
+                icon_img=subreddit.icon_img,
+                over18=subreddit.over18
+            )
+
+            exist.save()
+
+        return exist
 
 
 class DiscordServer(models.Model):

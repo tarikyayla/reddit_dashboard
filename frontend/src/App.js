@@ -1,24 +1,16 @@
 import React from "react";
-
-// import SignIn from "./components/SignIn";
-import Reddit from "./components/Dashboard/Reddit";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser } from "./user/userSlice";
+import Dashboard from "./dashboard/Dashboard";
+import RedditLogin from "./Reddit/RedditLogin";
 
 function App() {
-  const dummyRequest = () => {
-    fetch("/api/hello")
-      .then((resp) => {
-        return resp.json();
-      })
-      .then((data) => {
-        console.log("SELAMÜN ALEYKÜM ASLAN PARÇASI");
-      });
-  };
-
-  dummyRequest();
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
 
   return (
     <div>
-      <Reddit />
+      <Dashboard />
     </div>
   );
 }
