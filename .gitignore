@@ -20,3 +20,7 @@ venv/
 *.env 
 static/
 *.db
+*.pid
+*.dat
+*.dir
+*.bak
