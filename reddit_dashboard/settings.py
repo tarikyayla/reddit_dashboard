@@ -45,9 +45,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework.authtoken',  # <-- Here
+    'rest_framework.authtoken',
     'api',
-    'reddit_dashboard'
+    'reddit_dashboard',
+    'django_celery_results'
 ]
 
 MIDDLEWARE = [
@@ -174,3 +175,10 @@ PRAW_REDIRECT_URL = "http://localhost:8000/reddit_redict_url"
 # USER LOGIN INFORMATION 
 USERNAME = env("LOGIN_USERNAME")
 PASSWORD = env("LOGIN_PASSWORD")
+
+
+# Celery Settings
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'default'
