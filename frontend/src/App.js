@@ -1,17 +1,20 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "./user/userSlice";
-import Dashboard from "./dashboard/Dashboard";
-import RedditLogin from "./Reddit/RedditLogin";
+import { Provider } from "react-redux";
+import { applyMiddleware, createStore } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
+import thunk from "redux-thunk";
+import Reddit from "./Reddit";
+import reducer from "./reducer";
+
+const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk)));
 
 function App() {
-  const dispatch = useDispatch();
-  const user = useSelector(selectUser);
-
   return (
-    <div>
-      <Dashboard />
-    </div>
+    <Provider store={store}>
+      <div>
+        <Reddit />
+      </div>
+    </Provider>
   );
 }
 

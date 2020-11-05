@@ -1,15 +1,6 @@
 import React from "react";
-import {
-  Dimmer,
-  Divider,
-  Grid,
-  Icon,
-  Search,
-  Segment,
-  Image,
-  Loader,
-} from "semantic-ui-react";
-import styles from "./css/SearchBox.css";
+import { Divider, Grid, Icon, Search, Segment } from "semantic-ui-react";
+import "./css/SearchBox.css";
 
 const SearchBox = () => (
   <div className="Reddit__searchBox">
@@ -21,15 +12,11 @@ const SearchBox = () => (
         <Grid.Row verticalAlign="middle">
           <Grid.Column>
             <Search placeholder="Search subreddit..." />
-            <Segment>
-              <Dimmer active inverted>
-                <Loader inverted>Loading</Loader>
-              </Dimmer>
-              <Image src="https://react.semantic-ui.com/images/wireframe/short-paragraph.png" />
-            </Segment>
           </Grid.Column>
           <Grid.Column>
-            <Segment> </Segment>
+            <Segment inverted>
+              <h2>SubList</h2>
+            </Segment>
           </Grid.Column>
         </Grid.Row>
       </Grid>
