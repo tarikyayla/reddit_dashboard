@@ -22,5 +22,5 @@ urlpatterns = [
     path("", dashboard),
     path('api/', include('api.urls')),
     path('reddit_redict_url/', reddit_callback),
-    path('discord_redirect', discord_callback)
+    path('discord_redirect', discord_callback),
 ]

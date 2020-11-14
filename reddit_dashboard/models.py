@@ -135,4 +135,4 @@ class TextChannel(models.Model):
     slug = models.CharField(max_length=255)
     channel_id = models.CharField(unique=True, max_length=250)
     server = models.ForeignKey(DiscordServer, on_delete=models.CASCADE)
-    following_subreddits = models.ManyToManyField
+    following_subreddits = models.ManyToManyField(Subreddit)
