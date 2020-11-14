@@ -45,9 +45,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework.authtoken',  # <-- Here
+    'rest_framework.authtoken',
     'api',
-    'reddit_dashboard'
+    'reddit_dashboard',
+    'django_celery_results'
 ]
 
 MIDDLEWARE = [
@@ -106,7 +107,7 @@ DATABASE_ENGINE = {
 }
 
 
-DATABASES = DATABASE_ENGINE["SQLITE"]
+DATABASES = DATABASE_ENGINE["MYSQL"]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -163,7 +164,6 @@ STATICFILES_DIRS = [
 ]
 
 
-
 # PRAW CONFIGURATION
 PRAW_CLIENT_ID = env("PRAW_CLIENT_ID")
 PRAW_SECRET = env("PRAW_SECRET")
@@ -174,3 +174,24 @@ PRAW_REDIRECT_URL = "http://localhost:8000/reddit_redict_url"
 # USER LOGIN INFORMATION 
 USERNAME = env("LOGIN_USERNAME")
 PASSWORD = env("LOGIN_PASSWORD")
+
+
+# Celery Settings
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'default'
+
+# MAIL SETTINGS
+
+SEND_MAILS = True  # As celery report
+EMAIL_HOST = env("HOST", default=None)
+EMAIL_PORT = env("PORT", default=None)
+EMAIL_HOST_USER = env("EMAIL_ADDRESS", default=None)
+EMAIL_HOST_PASSWORD = env("EMAIL_PASSWORD", default=None)
+
+
+# DISCORD SETTINGS
+
+DISCORD_CLIENT_ID = env("DISCORD_CLIENT_ID")
+DISCORD_REDIRECT_URL = env("DISCORD_REDIRECT_ID", default="http://localhost:8000/discord_redirect")

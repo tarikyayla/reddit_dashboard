@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.timezone import now
 from django.conf import settings
 
+
 class DashboardUser(AbstractBaseUser):
     email = models.EmailField(unique=True)
     username = models.CharField(unique=True, max_length=255)
@@ -12,7 +13,7 @@ class DashboardUser(AbstractBaseUser):
     reddit_user_data = models.TextField(blank=True, null=True)
     reddit_user_id = models.CharField(blank=True, null=True, max_length=255)
     reddit_username = models.CharField(blank=True, null=True, max_length=255)
-    subreddits = models.ManyToManyField('Subreddit')
+    subreddits = models.ManyToManyField('Subreddit', blank=True)
     USERNAME_FIELD = 'username'
     objects = UserManager()
 
@@ -120,11 +121,18 @@ class Subreddit(models.Model):
 
 class DiscordServer(models.Model):
     name = models.CharField(max_length=255, blank=False, null=False)
-    server_id = models.CharField(max_length=1000, blank=False, null=False)
-    text_channel = models.CharField(max_length=255, blank=False, null=False)
-    subreddits = models.ManyToManyField(Subreddit)
+    server_id = models.CharField(max_length=250, blank=False, null=False, unique=True)
+    code = models.CharField(max_length=255)
     added_by = models.ForeignKey(DashboardUser, on_delete=models.DO_NOTHING)
-    create_date = models.DateTimeField(auto_now=True)
+    create_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
+
+
+class TextChannel(models.Model):
+    id = models.AutoField(primary_key=True)
+    slug = models.CharField(max_length=255)
+    channel_id = models.CharField(unique=True, max_length=250)
+    server = models.ForeignKey(DiscordServer, on_delete=models.CASCADE)
+    following_subreddits = models.ManyToManyField(Subreddit)
