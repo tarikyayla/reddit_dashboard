@@ -1,33 +1,50 @@
-import React, { Component } from "react";
-import {
-  Button,
-  Icon,
-  Segment,
-  Divider,
-  Header,
-  Image,
-} from "semantic-ui-react";
+import React from "react";
+import { connect } from "react-redux";
+import { Button, Icon, Header, Image, Form, Grid } from "semantic-ui-react";
 import "./css/Login.css";
 
-class RedditLogin extends Component {
-  render() {
-    return (
-      <div className="Reddit__btn">
-        <Segment>
-          <Header as="h2" floated="right">
-            <Button animated>
-              <Button.Content visible>Reddit Login</Button.Content>
-              <Button.Content hidden>
-                <Icon name="arrow right" />
-              </Button.Content>
-            </Button>
+const RedditLoginPage = ({ isRedditAuthActive, url }) => {
+  const redditButton = () => {
+    if (!isRedditAuthActive) {
+      let redirectUrl = url;
+      window.open(redirectUrl, "_self");
+    }
+  };
+  return (
+    <div className="redirect_page">
+      <Grid textAlign="center" verticalAlign="middle">
+        <Grid.Column style={{ maxWidth: 450 }}>
+          <Header as="h2" textAlign="center">
+            <Image>
+              <Icon name="github" />
+            </Image>
+            Log-in to your account
           </Header>
-          <Divider clearing />
-          <Image src="https://react.semantic-ui.com/images/wireframe/short-paragraph.png" />
-        </Segment>
-      </div>
-    );
-  }
-}
+          <Form size="large">
+            <Button
+              onClick={() => redditButton()}
+              color="blue"
+              fluid
+              size="massive"
+            >
+              Reddit Login
+            </Button>
+          </Form>
+        </Grid.Column>
+      </Grid>
+    </div>
+  );
+};
 
-export default RedditLogin;
+const mapStateToProps = (state) => {
+  return {
+    token: state.test.token,
+    headers: state.test.headers,
+    user: state.test.user,
+    redirect_link: state.test.redditAuth.redirect_link,
+    isRedditAuthActive: state.test.redditAuth.active,
+    url: state.test.redditAuth.redirect_link,
+  };
+};
+
+export default connect(mapStateToProps)(RedditLoginPage);

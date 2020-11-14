@@ -45,7 +45,7 @@ class RefreshSubreddits(APIView):
             return SUCCESS_RESPONSE
         except Exception as ex:
             logger.error(str(ex))
-            return FAIL_RESPONSE(ex)
+            raise ex 
 
 
 class Subreddits(viewsets.ModelViewSet):
