@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import ensure_csrf_cookie
 from api.reddit.manager import reddit_manager
-from  django.http.response import HttpResponseNotFound, HttpResponse
-from reddit_dashboard.models import DashboardUser
+from django.http.response import HttpResponseNotFound, HttpResponse, HttpResponseRedirect
+from reddit_dashboard.models import DashboardUser, DiscordServer
 from django.conf import settings
 
 @ensure_csrf_cookie
@@ -23,3 +23,19 @@ def reddit_callback(request):
         return HttpResponse("Success")
     else:
         return HttpResponseNotFound()
+
+
+def discord_callback(request):
+    user = DashboardUser.objects.filter(username=settings.USERNAME).first()
+    discord_id = request.GET['guild_id']
+    discord_code = request.GET['code']
+
+    dc = DiscordServer(
+        server_id=discord_id,
+        code=discord_code,
+        added_by=user,
+        name="Discord Server"
+    )
+
+    dc.save()
+    return HttpResponseRedirect("/")
