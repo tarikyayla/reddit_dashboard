@@ -1,0 +1,17 @@
+.boxes {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.s-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 100px;
+  width: 100%;
+}
+
+.user-card {
+  padding-left: 100px;
+}

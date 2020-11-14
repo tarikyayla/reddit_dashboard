@@ -1,16 +1,12 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "./user/userSlice";
-import Dashboard from "./dashboard/Dashboard";
-import RedditLogin from "./Reddit/RedditLogin";
+import Dashboard from "./components/dashboard/Dashboard";
+import { Route } from "react-router-dom";
 
 function App() {
-  const dispatch = useDispatch();
-  const user = useSelector(selectUser);
-
   return (
     <div>
-      <Dashboard />
+      <Route path="/" exact component={Dashboard} />
+      <Route path="/home" component={Dashboard} />
     </div>
   );
 }
