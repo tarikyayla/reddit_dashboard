@@ -189,3 +189,9 @@ EMAIL_HOST = env("HOST", default=None)
 EMAIL_PORT = env("PORT", default=None)
 EMAIL_HOST_USER = env("EMAIL_ADDRESS", default=None)
 EMAIL_HOST_PASSWORD = env("EMAIL_PASSWORD", default=None)
+
+
+# DISCORD SETTINGS
+
+DISCORD_CLIENT_ID = env("DISCORD_CLIENT_ID")
+DISCORD_REDIRECT_URL = env("DISCORD_REDIRECT_ID", default="http://localhost:8000/discord_redirect")

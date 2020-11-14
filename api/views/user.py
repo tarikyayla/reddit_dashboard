@@ -3,13 +3,14 @@ from rest_framework import generics, viewsets
 from api.responses import SUCCESS_RESPONSE, FAIL_RESPONSE
 from api.reddit.manager import reddit_manager
 from api.serializers import StandardResultsSetPagination
-from reddit_dashboard.models import DashboardUser, Subreddit
+from reddit_dashboard.models import Subreddit
 from reddit_dashboard import logger
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from api.serializers.reddit_serializers import SubredditSerializer
 from django.http.response import HttpResponseNotFound
-from rest_framework.decorators import action
+from rest_framework.authentication import TokenAuthentication
+
 
 
 class RedditAuth(APIView):
@@ -109,6 +110,7 @@ class SearchSubreddit(generics.ListAPIView):
             Subreddit.create(result, self.request.user)
 
         return Subreddit.objects.filter(name__startswith=search_text)
+
 
 
 
