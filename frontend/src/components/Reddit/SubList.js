@@ -1,12 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Icon, Item, Label, Button } from "semantic-ui-react";
-import "./css/SubReddits.css";
 
 const SubList = ({ subreddits }) => {
   return (
     <div container>
-      <div className="list">
+      <div>
         <Item.Group divided>
           {subreddits.results.map((subreddit) => (
             <Item key={subreddit.id}>
@@ -51,8 +50,5 @@ const mapStateToProps = (state) => {
     token: state.test.token,
   };
 };
-const mapDispatchToProps = (dispatch) => {
-  return {};
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(SubList);
+export default connect(mapStateToProps, null)(SubList);

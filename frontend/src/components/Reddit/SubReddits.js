@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button } from "semantic-ui-react";
+import { Button, Container, Segment } from "semantic-ui-react";
 import { getSubReddits } from "../../redux/actions/test";
 import "./css/SubReddits.css";
 import SubList from "./SubList";
@@ -8,10 +8,19 @@ import SubList from "./SubList";
 const SubReddits = ({ getSubReddits, token, btnActive }) => {
   return (
     <div className="container">
-      <div className="btn">
-        <Button onClick={() => getSubReddits(token)}>Get Follow List</Button>
-      </div>
-      {btnActive ? <SubList /> : null}
+      <Button color="green" onClick={() => getSubReddits(token)}>
+        Refresh
+      </Button>
+
+      {btnActive ? (
+        <>
+          <Segment>
+            <Container>
+              <SubList />
+            </Container>
+          </Segment>
+        </>
+      ) : null}
     </div>
   );
 };

@@ -1,7 +1,10 @@
 import React, { Component } from "react";
-import { Menu } from "semantic-ui-react";
+import { Menu, Input } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-export default class Navbar extends Component {
+import { searchText } from "../../redux/actions/test";
+import { connect } from "react-redux";
+
+class Navbar extends Component {
   state = { activeItem: "home" };
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
@@ -9,32 +12,62 @@ export default class Navbar extends Component {
   render() {
     const { activeItem } = this.state;
 
+    const handleSearchText = (e) => {
+      let text = e.target.value;
+      console.log(text);
+      this.props.searchText(text, this.props.token);
+    };
+
     return (
-      <div>
-        <Menu pointing secondary>
-          <Link to="home">
+      <Menu secondary pointing>
+        <Link to="">
+          <Menu.Item
+            name="home"
+            active={activeItem === "home"}
+            onClick={this.handleItemClick}
+          />
+        </Link>
+
+        <Link to="/subreddits">
+          <Menu.Item
+            name="follow list"
+            active={activeItem === "follow list"}
+            onClick={this.handleItemClick}
+          />
+        </Link>
+
+        <Menu.Menu position="right">
+          <Link to="profile">
             <Menu.Item
-              name="home"
-              active={activeItem === "home"}
+              icon="user circle"
+              name="user"
+              active={activeItem === "user"}
               onClick={this.handleItemClick}
             />
           </Link>
-          <Link to="followlist">
-            <Menu.Item
-              name="follow list"
-              active={activeItem === "follow list"}
-              onClick={this.handleItemClick}
-            />
+        </Menu.Menu>
+
+        <Menu.Menu position="right">
+          <Link to="search">
+            <Menu.Item>
+              <Input
+                inverted
+                size="mini"
+                icon="reddit"
+                placeholder="Search Subreddits..."
+                onChange={handleSearchText}
+              />
+            </Menu.Item>
           </Link>
-          <Menu.Menu position="right">
-            <Menu.Item
-              name="logout"
-              active={activeItem === "logout"}
-              onClick={this.handleItemClick}
-            />
-          </Menu.Menu>
-        </Menu>
-      </div>
+        </Menu.Menu>
+      </Menu>
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    token: state.test.token,
+  };
+};
+
+export default connect(mapStateToProps, { searchText })(Navbar);

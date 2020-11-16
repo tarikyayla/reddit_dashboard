@@ -1,18 +1,22 @@
-import { Input, Segment } from "semantic-ui-react";
+import { Container, Input, Segment } from "semantic-ui-react";
 import React from "react";
 import { searchText } from "../../redux/actions/test";
+import { getSubReddits } from "../../redux/actions/test";
 import "./css/SearchBox.css";
 import { connect } from "react-redux";
 import SearchedItems from "./SearchedItems";
 
-const SearchBox = ({ searchText, token }) => {
+const SearchBox = ({ searchText, token, getSubReddits }) => {
+  React.useEffect(() => {
+    getSubReddits(token);
+  }, [token, getSubReddits]);
   const handleChange = (e) => {
     let text = e.target.value;
     searchText(text, token);
   };
 
   return (
-    <div className="Reddit__searchBox">
+    <Container>
       <Segment raised>
         <Input
           onChange={handleChange}
@@ -22,7 +26,7 @@ const SearchBox = ({ searchText, token }) => {
         />
         <SearchedItems />
       </Segment>
-    </div>
+    </Container>
   );
 };
 
@@ -32,4 +36,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { searchText })(SearchBox);
+export default connect(mapStateToProps, { searchText, getSubReddits })(
+  SearchBox
+);

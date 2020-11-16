@@ -5,7 +5,7 @@ import {
   Segment,
   Icon,
   Pagination,
-  Loader,
+  Container,
 } from "semantic-ui-react";
 import React from "react";
 import {
@@ -90,31 +90,35 @@ const SearchedItems = ({
 
   if (searchResult !== null && text !== "") {
     return (
-      <Segment.Group>
-        <Segment>
-          {searchResult.results.map((sub) => (
-            <List selection divided>
-              <List.Item>
-                <Image src={sub.icon_img} avatar />
-                <List.Content>{sub.name}</List.Content>
-                <List.Content floated="right">{renderButton(sub)}</List.Content>
-              </List.Item>
-            </List>
-          ))}
-          <Pagination
-            onClick={handlePagination}
-            boundaryRange={0}
-            defaultActivePage={1}
-            ellipsisItem={null}
-            firstItem={null}
-            lastItem={null}
-            siblingRange={1}
-            totalPages={Math.ceil(totalResults / 20)}
-            nextItem={next !== null ? "⟩" : null}
-            prevItem={previous !== null ? "⟨" : null}
-          />
-        </Segment>
-      </Segment.Group>
+      <Container>
+        <Segment.Group>
+          <Segment>
+            {searchResult.results.map((sub) => (
+              <List selection divided>
+                <List.Item>
+                  <Image src={sub.icon_img} avatar />
+                  <List.Content>{sub.name}</List.Content>
+                  <List.Content floated="right">
+                    {renderButton(sub)}
+                  </List.Content>
+                </List.Item>
+              </List>
+            ))}
+            <Pagination
+              onClick={handlePagination}
+              boundaryRange={0}
+              defaultActivePage={1}
+              ellipsisItem={null}
+              firstItem={null}
+              lastItem={null}
+              siblingRange={1}
+              totalPages={Math.ceil(totalResults / 20)}
+              nextItem={next !== null ? "⟩" : null}
+              prevItem={previous !== null ? "⟨" : null}
+            />
+          </Segment>
+        </Segment.Group>
+      </Container>
     );
   } else {
     return null;
