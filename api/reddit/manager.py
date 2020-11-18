@@ -84,7 +84,7 @@ class RedditManager:
         return self.get_user_instance(user=user).user.subreddits()
 
 
-reddit_manager = RedditManager() # singleton object
+reddit_manager = RedditManager()  # singleton object
 
 
 

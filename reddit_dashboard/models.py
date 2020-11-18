@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractBaseUser, UserManager
 from django.db import models
 from django.utils.timezone import now
 from django.conf import settings
+from reddit_dashboard.redis_connection import REDIS_CONNECTION, RedisConsts
+import json
 
 
 class DashboardUser(AbstractBaseUser):
@@ -136,3 +138,69 @@ class TextChannel(models.Model):
     channel_id = models.CharField(unique=True, max_length=250)
     server = models.ForeignKey(DiscordServer, on_delete=models.CASCADE)
     following_subreddits = models.ManyToManyField(Subreddit)
+
+    def __str__(self):
+        self.slug = self.slug if not self.slug else ""
+        return self.server.name + "." + self.slug
+
+
+class Posts(models.Model):
+    id = models.AutoField(primary_key=True)
+    submission_id = models.CharField(max_length=250, unique=True)
+    title = models.CharField(max_length=255, null=False, blank=False)
+    url = models.CharField(max_length=255, null=False, blank=False)
+    over_18 = models.BooleanField(default=False)
+    text = models.TextField()
+    subreddit = models.ForeignKey(Subreddit, on_delete=models.CASCADE)
+    create_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "Post"
+        verbose_name_plural = "Posts"
+
+
+
+    @classmethod
+    def create(cls, submission, subreddit):
+        cls(
+            submission_id=submission.id,
+            title=submission.title,
+            url=submission.permalink,
+            over_18=submission.over_18,
+            text=submission.selftext,
+            subreddit=subreddit
+        ).save()
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # save
+        for text_channel in TextChannel.objects.filter(following_subreddits=self.subreddit):
+            SentPosts(post=self, text_channel=text_channel).save()
+
+
+class SentPosts(models.Model):
+    id = models.AutoField(primary_key=True)
+    post = models.ForeignKey(Posts, on_delete=models.CASCADE, related_name='sent_posts_posts')
+    text_channel = models.ForeignKey(TextChannel, on_delete=models.CASCADE, related_name="sent_posts_text_channel")
+    SentDate = models.DateTimeField(auto_now_add=True)
+
+    def serialize(self):
+        return json.dumps(
+        {
+            "id": self.id,
+            "post_id": self.post.id,
+            "text_channel_id": self.text_channel.id,
+            "server_id": self.text_channel.server_id,
+            "url": self.post.url,
+            "text": self.post.text,
+            "title": self.post.title,
+        })
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
+        REDIS_CONNECTION.lpush(RedisConsts.DISCORD_PUSH, self.serialize())
+
+
