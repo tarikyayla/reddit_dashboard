@@ -142,15 +142,10 @@ AUTH_USER_MODEL = 'reddit_dashboard.DashboardUser'
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -169,16 +164,20 @@ PRAW_CLIENT_ID = env("PRAW_CLIENT_ID")
 PRAW_SECRET = env("PRAW_SECRET")
 PRAW_USER_AGENT = env("PRAW_USER_AGENT")
 PRAW_REDIRECT_URL = "http://localhost:8000/reddit_redict_url"
-# DISCORD CONFIGURATION
 
 # USER LOGIN INFORMATION 
 USERNAME = env("LOGIN_USERNAME")
 PASSWORD = env("LOGIN_PASSWORD")
 
+# REDIS CONNECTIONS
+
+REDIS_HOST = "127.0.0.1"
+REDIS_PORT = 6379
+REDIS_DATABASE = 0
 
 # Celery Settings
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DATABASE}'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'default'
 
@@ -194,4 +193,8 @@ EMAIL_HOST_PASSWORD = env("EMAIL_PASSWORD", default=None)
 # DISCORD SETTINGS
 
 DISCORD_CLIENT_ID = env("DISCORD_CLIENT_ID")
+DISCORD_BOT_TOKEN = env("DISCORD_TOKEN")
 DISCORD_REDIRECT_URL = env("DISCORD_REDIRECT_ID", default="http://localhost:8000/discord_redirect")
+
+
+

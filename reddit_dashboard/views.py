@@ -19,8 +19,7 @@ def reddit_callback(request):
         user.reddit_user_id = reddit_manager.get_refresh_token(code)
         user.save()
         reddit_manager.get_user_data(user=user)
-
-        return HttpResponse("Success")
+        return HttpResponseRedirect("/")
     else:
         return HttpResponseNotFound()
 

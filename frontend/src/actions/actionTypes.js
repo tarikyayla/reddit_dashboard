@@ -1,6 +1,0 @@
-export const LOGIN_WITH_REDDIT = "LOGIN_WITH_REDDIT";
-export const SEARCH_BY_NAME = "SEARCH_BY_NAME";
-export const ADD_TO_SERVER = "ADD_TO_SERVER";
-export const ADD_TO_LIST = "ADD_TO_LIST";
-export const DISCORD_LOGIN = "DISCORD_LOGIN";
-export const GET_USER_PROFILE = "GET_USER_PROFILE";

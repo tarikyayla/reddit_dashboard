@@ -1,0 +1,20 @@
+.container {
+  padding: 50px 100px 0 100px;
+  display: flex;
+  flex-direction: column;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
+.list {
+  padding-bottom: 10px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+}
