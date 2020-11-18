@@ -37,7 +37,7 @@ const CardExampleCardProps = ({ userData, username }) => {
                       <Card.Header>{username}</Card.Header>
                       <Card.Meta>Reddit User</Card.Meta>
                       <Card.Description>
-                        <Icon name="reddit"></Icon> {userData.subscribers}{" "}
+                        <Icon name="reddit"></Icon> {userData.subscribers}
                         <strong>subscribers</strong>
                       </Card.Description>
                     </Card.Content>

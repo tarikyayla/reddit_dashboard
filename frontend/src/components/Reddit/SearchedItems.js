@@ -14,7 +14,7 @@ import {
   getSubReddits,
   removeSubreddit,
 } from "../../redux/actions/test";
-import "./css/SearchBox.css";
+
 import { connect } from "react-redux";
 
 const SearchedItems = ({
@@ -28,7 +28,7 @@ const SearchedItems = ({
   totalResults,
   addSubreddit,
   getSubReddits,
-  isLoading,
+
   removeSubreddit,
 }) => {
   React.useEffect(() => {

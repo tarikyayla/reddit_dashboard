@@ -22,7 +22,7 @@ class Dashboard extends Component {
         ) : (
           <>
             <SubReddits />
-            <SearchBox />
+            {/* <SearchBox /> */}
           </>
         )}
       </div>

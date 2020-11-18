@@ -5,6 +5,7 @@ const initialState = {
   isLoading: false,
   msg: null,
   discord_channels: [],
+  text_channels: {},
 };
 
 export default function (state = initialState, action) {
@@ -31,5 +32,22 @@ export default function (state = initialState, action) {
       add_url: action.payload.add_url,
     };
   }
+
+  if (action.type === actionTypes.CREATE_TEXT_CHANNEL) {
+    return {
+      ...state,
+      text_channels: {
+        ...state.text_channels,
+        channelId: action.payload.channel_id,
+      },
+    };
+  }
+
+  if (action.type === actionTypes.DELETE_TEXT_CHANNEL) {
+    return {
+      ...state,
+    };
+  }
+
   return state;
 }

@@ -1,3 +1,6 @@
 export const GET_DC_SERVERS = "GET_DC_SERVERS";
 export const GET_REQ = "GET_REQ";
 export const GET_REQ_FAIL = "GET_REQ_FAIL";
+export const CREATE_TEXT_CHANNEL = "CREATE_TEXT_CHANNEL";
+export const FORM_VALIDATION = "FORM_VALIDATION";
+export const DELETE_TEXT_CHANNEL = "DELETE_TEXT_CHANNEL";

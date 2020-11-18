@@ -1,44 +1,74 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Icon, Item, Label, Button } from "semantic-ui-react";
+import {
+  Button,
+  Divider,
+  Dropdown,
+  Image,
+  Label,
+  List,
+  Segment,
+} from "semantic-ui-react";
+import { getDcServers } from "../../redux/actions/discordActions";
 
-const SubList = ({ subreddits }) => {
+import "./css/Sublist.css";
+const SubList = ({ subreddits, getDcServers, token, discord_channels }) => {
+  React.useEffect(() => {
+    getDcServers(token);
+  }, [getDcServers, token]);
+
+  const list = (subreddit) => {
+    return (
+      <List.Item>
+        {/* btn */}
+        <List.Content floated="right">
+          <Button color="green" basic size="tiny">
+            Add
+          </Button>
+        </List.Content>
+        {/* selector */}
+        <List.Content floated="right">
+          <Dropdown
+            button
+            className="icon"
+            floating
+            labeled
+            search
+            text="Select Language"
+          />
+          {/* +18 label */}
+        </List.Content>
+        <List.Content floated="right">
+          {subreddit.over18 ? null : <Label color="red">+18</Label>}
+        </List.Content>
+        {/* specs */}
+
+        <List.Content>
+          <List.Header>
+            {subreddit.icon_img === "" || subreddit.icon_img === null ? (
+              <Image
+                src="https://b.thumbs.redditmedia.com/S6FTc5IJqEbgR3rTXD5boslU49bEYpLWOlh8-CMyjTY.png"
+                avatar
+              />
+            ) : (
+              <Image src={subreddit.icon_img} avatar />
+            )}
+
+            <span> </span>
+            {subreddit.name}
+          </List.Header>
+        </List.Content>
+      </List.Item>
+    );
+  };
+
   return (
-    <div container>
-      <div>
-        <Item.Group divided>
-          {subreddits.results.map((subreddit) => (
-            <Item key={subreddit.id}>
-              {subreddit.icon_img === "" || subreddit.icon_img === null ? (
-                <Item.Image
-                  src="https://b.thumbs.redditmedia.com/S6FTc5IJqEbgR3rTXD5boslU49bEYpLWOlh8-CMyjTY.png"
-                  size="tiny"
-                />
-              ) : (
-                <Item.Image src={subreddit.icon_img} size="tiny" />
-              )}
-              <Item.Content>
-                <Item.Header>{subreddit.name}</Item.Header>
-                <Item.Meta>
-                  <span className="cinema">
-                    <strong> {subreddit.subscribers} </strong> subscribers
-                  </span>
-                </Item.Meta>
-                <Item.Extra>
-                  {subreddit.over18 ? null : <Label color="red">+18</Label>}
-                </Item.Extra>
-                <Item.Extra>
-                  <Button floated="right" basic>
-                    Add
-                    <Icon name="right chevron" />
-                  </Button>
-                </Item.Extra>
-              </Item.Content>
-            </Item>
-          ))}
-        </Item.Group>
-      </div>
-    </div>
+    <Segment inverted padded="very">
+      <Divider />
+      <List divided inverted relaxed>
+        {subreddits.results.map((subreddit) => list(subreddit))}
+      </List>
+    </Segment>
   );
 };
 
@@ -48,7 +78,8 @@ const mapStateToProps = (state) => {
     totalResults: state.test.totalResults,
     currentPage: state.test.currentPage,
     token: state.test.token,
+    discord_channels: state.discord.discord_channels,
   };
 };
 
-export default connect(mapStateToProps, null)(SubList);
+export default connect(mapStateToProps, { getDcServers })(SubList);

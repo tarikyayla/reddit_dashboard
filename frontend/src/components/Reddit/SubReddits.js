@@ -1,27 +1,23 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button, Container, Segment } from "semantic-ui-react";
+import { Button } from "semantic-ui-react";
 import { getSubReddits } from "../../redux/actions/test";
 import "./css/SubReddits.css";
 import SubList from "./SubList";
 
 const SubReddits = ({ getSubReddits, token, btnActive }) => {
+  React.useEffect(() => {
+    getSubReddits(token);
+  }, [token, getSubReddits]);
+
   return (
-    <div className="container">
+    <>
       <Button color="green" onClick={() => getSubReddits(token)}>
         Refresh
       </Button>
 
-      {btnActive ? (
-        <>
-          <Segment>
-            <Container>
-              <SubList />
-            </Container>
-          </Segment>
-        </>
-      ) : null}
-    </div>
+      {btnActive ? <SubList /> : null}
+    </>
   );
 };
 
