@@ -2,6 +2,7 @@ from rest_framework import serializers
 from reddit_dashboard.models import DiscordServer, TextChannel
 from api.serializers.reddit_serializers import SubredditSerializer
 
+
 class TextChannelSerializer(serializers.ModelSerializer):
 
     following_subreddits = SubredditSerializer(many=True)
