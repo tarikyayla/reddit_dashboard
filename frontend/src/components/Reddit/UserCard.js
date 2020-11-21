@@ -1,14 +1,24 @@
 import React from "react";
 
 import { connect } from "react-redux";
-import { Button, Card, Icon, Image } from "semantic-ui-react";
-import "./css/UserCard.css";
+import { Button, Card, Header, Icon, Image, Segment } from "semantic-ui-react";
+import { getToken } from "../../redux/actions/test";
 
-const CardExampleCardProps = ({ userData, username }) => {
+const CardExampleCardProps = ({ userData, username, getToken }) => {
+  React.useEffect(() => {
+    getToken();
+  }, [getToken]);
+
+  const handleLogout = () => {
+    console.log("logged out");
+  };
   return (
     <>
-      <Card.Group className="User_card">
-        <Card>
+      <Segment inverted textAlign="center">
+        <Header as="h1">User Data</Header>
+      </Segment>
+      <Segment vertical inverted>
+        <Card centered color="grey">
           <Card.Content>
             <Image floated="right" size="large" src={userData.icon_img} />
             <Card.Header>{username}</Card.Header>
@@ -19,14 +29,12 @@ const CardExampleCardProps = ({ userData, username }) => {
             </Card.Description>
           </Card.Content>
           <Card.Content extra>
-            <div className="ui two buttons">
-              <Button basic color="green">
-                Active
-              </Button>
-            </div>
+            <Button onClick={handleLogout} fluid color="red">
+              Logout
+            </Button>
           </Card.Content>
         </Card>
-      </Card.Group>
+      </Segment>
     </>
   );
 };
@@ -39,4 +47,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(CardExampleCardProps);
+export default connect(mapStateToProps, {
+  getToken,
+})(CardExampleCardProps);

@@ -1,18 +1,33 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button } from "semantic-ui-react";
+import { Button, Popup } from "semantic-ui-react";
 import { getSubReddits } from "../../redux/actions/test";
 import "./css/SubReddits.css";
 import SubList from "./SubList";
 
-const SubReddits = ({ getSubReddits, token, btnActive }) => {
+const SubReddits = ({ getSubReddits, token, btnActive, user }) => {
+  React.useEffect(() => {
+    getSubReddits(token);
+  }, [token, getSubReddits]);
+
   return (
-    <div className="container">
-      <div className="btn">
-        <Button onClick={() => getSubReddits(token)}>Get Follow List</Button>
-      </div>
+    <>
       {btnActive ? <SubList /> : null}
-    </div>
+      <Popup
+        content="Refresh stack."
+        mouseEnterDelay={200}
+        position="top left"
+        trigger={
+          <Button
+            floated="right"
+            basic
+            color="green"
+            onClick={() => getSubReddits(token)}
+            icon="refresh"
+          />
+        }
+      />
+    </>
   );
 };
 
@@ -21,6 +36,7 @@ const mapStateToProps = (state) => {
     subreddits: state.test.subreddits,
     token: state.test.token,
     btnActive: state.test.getListOfSubReddits,
+    user: state.test.user,
   };
 };
 

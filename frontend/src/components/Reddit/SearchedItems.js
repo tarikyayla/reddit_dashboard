@@ -5,7 +5,8 @@ import {
   Segment,
   Icon,
   Pagination,
-  Loader,
+  Container,
+  Divider,
 } from "semantic-ui-react";
 import React from "react";
 import {
@@ -14,7 +15,7 @@ import {
   getSubReddits,
   removeSubreddit,
 } from "../../redux/actions/test";
-import "./css/SearchBox.css";
+
 import { connect } from "react-redux";
 
 const SearchedItems = ({
@@ -28,7 +29,7 @@ const SearchedItems = ({
   totalResults,
   addSubreddit,
   getSubReddits,
-  isLoading,
+
   removeSubreddit,
 }) => {
   React.useEffect(() => {
@@ -68,9 +69,8 @@ const SearchedItems = ({
 
     if (added) {
       return (
-        <Button onClick={() => handleRemoveButton(sub.id)} basic color="red">
-          Remove
-          <Icon name="remove" />
+        <Button icon onClick={() => handleRemoveButton(sub.id)} color="red">
+          <Icon name="remove circle" />
         </Button>
       );
     }
@@ -81,40 +81,51 @@ const SearchedItems = ({
           handleAddButton(sub);
         }}
         basic
-        color="green"
+        icon
+        color="grey"
       >
-        Follow <Icon name="plus" />
+        <Icon name="plus" />
       </Button>
     );
   };
 
   if (searchResult !== null && text !== "") {
     return (
-      <Segment.Group>
-        <Segment>
-          {searchResult.results.map((sub) => (
-            <List selection divided>
-              <List.Item>
+      <Segment inverted>
+        {searchResult.results.map((sub) => (
+          <List selection divided inverted>
+            <List.Item>
+              {sub.icon_img === null ||
+              sub.icon_img === "" ||
+              sub.icon_img === undefined ? (
+                <Image
+                  src="https://b.thumbs.redditmedia.com/iTldIIlQVSoH6SPlH9iiPZZVzFWubJU7cOM__uqSOqU.png"
+                  avatar
+                />
+              ) : (
                 <Image src={sub.icon_img} avatar />
-                <List.Content>{sub.name}</List.Content>
-                <List.Content floated="right">{renderButton(sub)}</List.Content>
-              </List.Item>
-            </List>
-          ))}
-          <Pagination
-            onClick={handlePagination}
-            boundaryRange={0}
-            defaultActivePage={1}
-            ellipsisItem={null}
-            firstItem={null}
-            lastItem={null}
-            siblingRange={1}
-            totalPages={Math.ceil(totalResults / 20)}
-            nextItem={next !== null ? "⟩" : null}
-            prevItem={previous !== null ? "⟨" : null}
-          />
-        </Segment>
-      </Segment.Group>
+              )}
+              <List.Content>{sub.name}</List.Content>
+
+              <List.Content floated="right">{renderButton(sub)}</List.Content>
+            </List.Item>
+            <Divider />
+          </List>
+        ))}
+        <Pagination
+          inverted
+          onClick={handlePagination}
+          boundaryRange={0}
+          defaultActivePage={1}
+          ellipsisItem={null}
+          firstItem={null}
+          lastItem={null}
+          siblingRange={1}
+          totalPages={Math.ceil(totalResults / 20)}
+          nextItem={next !== null ? "⟩" : null}
+          prevItem={previous !== null ? "⟨" : null}
+        />
+      </Segment>
     );
   } else {
     return null;

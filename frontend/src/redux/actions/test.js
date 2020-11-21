@@ -196,3 +196,9 @@ export const removeSubreddit = (id, token) => (dispatch) => {
     .catch((err) => console.log(err.message));
   dispatch({ type: "LOADED" });
 };
+
+export const logout = () => {
+  return {
+    type: "LOGOUT",
+  };
+};

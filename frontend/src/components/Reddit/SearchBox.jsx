@@ -1,28 +1,35 @@
-import { Input, Segment } from "semantic-ui-react";
 import React from "react";
+import { Divider, Header, Input, Segment } from "semantic-ui-react";
 import { searchText } from "../../redux/actions/test";
-import "./css/SearchBox.css";
+import { getSubReddits } from "../../redux/actions/test";
 import { connect } from "react-redux";
 import SearchedItems from "./SearchedItems";
 
-const SearchBox = ({ searchText, token }) => {
+const SearchBox = ({ searchText, token, getSubReddits }) => {
+  React.useEffect(() => {
+    getSubReddits(token);
+  }, [token, getSubReddits]);
+
   const handleChange = (e) => {
     let text = e.target.value;
     searchText(text, token);
   };
 
   return (
-    <div className="Reddit__searchBox">
-      <Segment raised>
-        <Input
-          onChange={handleChange}
-          fluid
-          icon="reddit"
-          placeholder="Search Subreddits..."
-        />
-        <SearchedItems />
-      </Segment>
-    </div>
+    <Segment fluid inverted>
+      <Header color="grey" textAlign="center">
+        Search any subreddit ...
+      </Header>
+      <Input
+        onChange={handleChange}
+        fluid
+        icon="reddit"
+        placeholder="Search Subreddits..."
+        transparent
+      />
+      <Divider />
+      <SearchedItems />
+    </Segment>
   );
 };
 
@@ -32,4 +39,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { searchText })(SearchBox);
+export default connect(mapStateToProps, { searchText, getSubReddits })(
+  SearchBox
+);
