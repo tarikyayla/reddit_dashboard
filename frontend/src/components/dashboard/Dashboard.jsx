@@ -4,36 +4,26 @@ import { getToken, btnClicked } from "../../redux/actions/test";
 import RedditLoginRedux from "../Reddit/RedditLoginRedux";
 import { getUserDataFail } from "../../redux/actions/test";
 import SubReddits from "../Reddit/SubReddits";
-import UserCard from "../Reddit/UserCard";
-import Navbar from "../dashboard/Navbar";
-import SearchBox from "../Reddit/SearchBox";
-import "./d.css";
+import { Container } from "semantic-ui-react";
 
 class Dashboard extends Component {
   componentDidMount() {
-    this.props.getToken();
+    if (this.props.token === null) {
+      this.props.getToken();
+    }
   }
 
   render() {
     return (
-      <div>
-        {!this.props.user ? (
+      <>
+        {this.props.user === null ? (
           <RedditLoginRedux />
         ) : (
-          <>
-            <Navbar />
-            <div className="boxes">
-              <div className="user-card">
-                <UserCard />
-              </div>
-              <div className="s-box">
-                <SearchBox />
-              </div>
-            </div>
+          <Container>
             <SubReddits />
-          </>
+          </Container>
         )}
-      </div>
+      </>
     );
   }
 }
@@ -43,6 +33,7 @@ const mapStateToProps = (state) => {
     isLoginActive: state.test.redditLoginBtn,
     url: state.test.redditAuth.redirect_link,
     user: state.test.user,
+    token: state.test.token,
   };
 };
 
