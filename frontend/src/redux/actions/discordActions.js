@@ -75,3 +75,49 @@ export const deleteTextChannel = (token, textChannelId) => (dispatch) => {
     .then((resp) => dispatch({ type: actionTypes.DELETE_TEXT_CHANNEL }))
     .catch((err) => console.log(err.message));
 };
+
+export const addSubredditToTextChannel = (
+  textChannelId,
+  subreddit_id,
+  token
+) => (dispatch) => {
+  fetch(`api/text-channels/${textChannelId}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      subreddit_id: subreddit_id,
+      method: 1,
+    }),
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: token,
+    },
+  })
+    .then((resp) => resp.json())
+    .then((resp) => {
+      dispatch({
+        type: actionTypes.ADD_SUBREDDIT_TO_TEXT_CHANNEL,
+      });
+    })
+    .catch((err) => console.log(err.message));
+};
+
+export const getFollowingSubreddits = (textChannelId, token) => (dispatch) => {
+  axios
+    .get(`àpi/text-channels/${textChannelId}`, {
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: token,
+      },
+    })
+    .then((resp) =>
+      dispatch({
+        type: actionTypes.GET_FOLLOWING_SUBREDDITS,
+        payload: {
+          textChannel: resp.data,
+        },
+      })
+    )
+    .catch((err) => console.log(err.message));
+};

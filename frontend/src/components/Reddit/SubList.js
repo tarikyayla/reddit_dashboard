@@ -3,45 +3,45 @@ import { connect } from "react-redux";
 import {
   Button,
   Divider,
-  Dropdown,
+  Header,
   Image,
   Label,
   List,
   Segment,
 } from "semantic-ui-react";
-import { getDcServers } from "../../redux/actions/discordActions";
-
+import {
+  getDcServers,
+  addSubredditToTextChannel,
+} from "../../redux/actions/discordActions";
+import { removeSubreddit } from "../../redux/actions/test";
 import "./css/Sublist.css";
-const SubList = ({ subreddits, getDcServers, token, discord_channels }) => {
+
+const SubList = ({ subreddits, getDcServers, token, removeSubreddit }) => {
   React.useEffect(() => {
     getDcServers(token);
   }, [getDcServers, token]);
 
+  const handleDeleteSubReddit = (id) => {
+    removeSubreddit(id, token);
+  };
+
   const list = (subreddit) => {
     return (
       <List.Item>
-        {/* btn */}
         <List.Content floated="right">
-          <Button color="green" basic size="tiny">
-            Add
+          <Button
+            onClick={() => handleDeleteSubReddit(subreddit.id)}
+            color="red"
+            basic
+            size="tiny"
+          >
+            Delete
           </Button>
         </List.Content>
-        {/* selector */}
+
         <List.Content floated="right">
-          <Dropdown
-            button
-            className="icon"
-            floating
-            labeled
-            search
-            text="Select Language"
-          />
-          {/* +18 label */}
+          {subreddit.over18 ? <Label color="red">+18</Label> : null}
         </List.Content>
-        <List.Content floated="right">
-          {subreddit.over18 ? null : <Label color="red">+18</Label>}
-        </List.Content>
-        {/* specs */}
 
         <List.Content>
           <List.Header>
@@ -53,7 +53,6 @@ const SubList = ({ subreddits, getDcServers, token, discord_channels }) => {
             ) : (
               <Image src={subreddit.icon_img} avatar />
             )}
-
             <span> </span>
             {subreddit.name}
           </List.Header>
@@ -64,6 +63,9 @@ const SubList = ({ subreddits, getDcServers, token, discord_channels }) => {
 
   return (
     <Segment inverted padded="very">
+      <Header as="h2">
+        Subreddits <Label color="grey">{subreddits.count}</Label>
+      </Header>
       <Divider />
       <List divided inverted relaxed>
         {subreddits.results.map((subreddit) => list(subreddit))}
@@ -79,7 +81,12 @@ const mapStateToProps = (state) => {
     currentPage: state.test.currentPage,
     token: state.test.token,
     discord_channels: state.discord.discord_channels,
+    currentTextChannel: state.discord.currentTextChannel,
   };
 };
 
-export default connect(mapStateToProps, { getDcServers })(SubList);
+export default connect(mapStateToProps, {
+  getDcServers,
+  addSubredditToTextChannel,
+  removeSubreddit,
+})(SubList);

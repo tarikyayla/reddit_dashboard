@@ -49,5 +49,18 @@ export default function (state = initialState, action) {
     };
   }
 
+  if (action.type === actionTypes.ADD_SUBREDDIT_TO_TEXT_CHANNEL) {
+    return { ...state };
+  }
+  if (action.type === actionTypes.GET_FOLLOWING_SUBREDDITS) {
+    return {
+      ...state,
+      textChannels: {
+        ...state.text_channels,
+        textChannel: action.payload.textChannel,
+      },
+    };
+  }
+
   return state;
 }

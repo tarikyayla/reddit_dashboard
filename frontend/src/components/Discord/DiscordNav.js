@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { getToken, getSubReddits } from "../../redux/actions/test";
 import { getDcServers } from "../../redux/actions/discordActions";
-import { Grid, Segment, Menu, Container } from "semantic-ui-react";
+import { Grid, Segment, Menu, Button } from "semantic-ui-react";
 import TextChannels from "./TextChannels";
 import DiscordServers from "./DiscordServers";
 import SubReddits from "../Reddit/SubReddits";
@@ -10,7 +10,6 @@ import SearchBox from "../Reddit/SearchBox";
 
 class DiscordServerList extends React.Component {
   state = { activeItem: "server settings" };
-
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
   componentDidMount() {
@@ -23,20 +22,28 @@ class DiscordServerList extends React.Component {
     }
     if (this.state.activeItem === "text channels") {
       return (
-        <Segment raised>
+        <Segment inverted raised>
           <TextChannels />
         </Segment>
       );
     }
     if (this.state.activeItem === "subreddits") {
-      return <SubReddits />;
+      if (this.props.subreddits.count > 0) {
+        return (
+          <Segment inverted>
+            <SubReddits />
+          </Segment>
+        );
+      } else {
+        return (
+          <Button basic color="grey">
+            YOUR STACK IS EMPTY !
+          </Button>
+        );
+      }
     }
-    if (this.state.activeItem === "search subreddit") {
-      return (
-        <Segment raised>
-          <SearchBox />
-        </Segment>
-      );
+    if (this.state.activeItem === "add subreddit") {
+      return <SearchBox />;
     }
   };
 
@@ -44,38 +51,38 @@ class DiscordServerList extends React.Component {
     const { activeItem } = this.state;
 
     return (
-      <Container fluid>
-        <Grid>
-          <Grid.Column width={4}>
-            <Menu fluid vertical tabular>
-              <Menu.Item
-                name="server settings"
-                active={activeItem === "server settings"}
-                onClick={this.handleItemClick}
-              />
-              <Menu.Item
-                name="text channels"
-                active={activeItem === "text channels"}
-                onClick={this.handleItemClick}
-              />
-              <Menu.Item
-                name="subreddits"
-                active={activeItem === "subreddits"}
-                onClick={this.handleItemClick}
-              />
-              <Menu.Item
-                name="search subreddit"
-                active={activeItem === "search subreddit"}
-                onClick={this.handleItemClick}
-              />
-            </Menu>
-          </Grid.Column>
+      <Grid>
+        <Grid.Column width={4}>
+          <Button fluid basic color="grey">
+            Menu
+          </Button>
 
-          <Grid.Column stretched width={12}>
-            {this.renderSelectedOption()}
-          </Grid.Column>
-        </Grid>
-      </Container>
+          <Menu fluid inverted pointing vertical>
+            <Menu.Item
+              name="server settings"
+              active={activeItem === "server settings"}
+              onClick={this.handleItemClick}
+            />
+            <Menu.Item
+              name="text channels"
+              active={activeItem === "text channels"}
+              onClick={this.handleItemClick}
+            />
+            <Menu.Item
+              name="subreddits"
+              active={activeItem === "subreddits"}
+              onClick={this.handleItemClick}
+            />
+            <Menu.Item
+              name="add subreddit"
+              active={activeItem === "add subreddit"}
+              onClick={this.handleItemClick}
+            />
+          </Menu>
+        </Grid.Column>
+
+        <Grid.Column width={12}>{this.renderSelectedOption()}</Grid.Column>
+      </Grid>
     );
   }
 }
@@ -86,6 +93,7 @@ const mapStateToProps = (state) => {
     discord_channels: state.discord.discord_channels,
     loading: state.discord.isLoading,
     text_channels: state.discord.discord_channels.text_channels,
+    subreddits: state.test.subreddits,
   };
 };
 

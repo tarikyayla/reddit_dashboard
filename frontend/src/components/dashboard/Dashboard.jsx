@@ -4,8 +4,7 @@ import { getToken, btnClicked } from "../../redux/actions/test";
 import RedditLoginRedux from "../Reddit/RedditLoginRedux";
 import { getUserDataFail } from "../../redux/actions/test";
 import SubReddits from "../Reddit/SubReddits";
-import SearchBox from "../Reddit/SearchBox";
-import "./d.css";
+import { Container } from "semantic-ui-react";
 
 class Dashboard extends Component {
   componentDidMount() {
@@ -16,16 +15,15 @@ class Dashboard extends Component {
 
   render() {
     return (
-      <div>
-        {!this.props.user ? (
+      <>
+        {this.props.user === null ? (
           <RedditLoginRedux />
         ) : (
-          <>
+          <Container>
             <SubReddits />
-            {/* <SearchBox /> */}
-          </>
+          </Container>
         )}
-      </div>
+      </>
     );
   }
 }

@@ -1,60 +1,40 @@
 import React from "react";
 
 import { connect } from "react-redux";
-import {
-  Button,
-  Card,
-  Container,
-  Grid,
-  Header,
-  Icon,
-  Image,
-  Segment,
-} from "semantic-ui-react";
-import "./css/UserCard.css";
+import { Button, Card, Header, Icon, Image, Segment } from "semantic-ui-react";
+import { getToken } from "../../redux/actions/test";
 
-const CardExampleCardProps = ({ userData, username }) => {
+const CardExampleCardProps = ({ userData, username, getToken }) => {
+  React.useEffect(() => {
+    getToken();
+  }, [getToken]);
+
+  const handleLogout = () => {
+    console.log("logged out");
+  };
   return (
     <>
-      <Container>
-        <Segment inverted>
-          <Header as="h1" textAlign="left">
-            User Data
-          </Header>
-        </Segment>
-        <Segment>
-          <Grid>
-            <Grid.Row>
-              <Grid.Column width={6}>
-                <Card.Group className="User_card">
-                  <Card>
-                    <Card.Content>
-                      <Image
-                        floated="right"
-                        size="large"
-                        src={userData.icon_img}
-                      />
-                      <Card.Header>{username}</Card.Header>
-                      <Card.Meta>Reddit User</Card.Meta>
-                      <Card.Description>
-                        <Icon name="reddit"></Icon> {userData.subscribers}
-                        <strong>subscribers</strong>
-                      </Card.Description>
-                    </Card.Content>
-                    <Card.Content extra>
-                      <div className="ui two buttons">
-                        <Button basic color="green">
-                          Active
-                        </Button>
-                      </div>
-                    </Card.Content>
-                  </Card>
-                </Card.Group>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Segment>
-      </Container>
+      <Segment inverted textAlign="center">
+        <Header as="h1">User Data</Header>
+      </Segment>
+      <Segment vertical inverted>
+        <Card centered color="grey">
+          <Card.Content>
+            <Image floated="right" size="large" src={userData.icon_img} />
+            <Card.Header>{username}</Card.Header>
+            <Card.Meta>Reddit User</Card.Meta>
+            <Card.Description>
+              <Icon name="reddit"></Icon> {userData.subscribers}{" "}
+              <strong>subscribers</strong>
+            </Card.Description>
+          </Card.Content>
+          <Card.Content extra>
+            <Button onClick={handleLogout} fluid color="red">
+              Logout
+            </Button>
+          </Card.Content>
+        </Card>
+      </Segment>
     </>
   );
 };
@@ -67,4 +47,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(CardExampleCardProps);
+export default connect(mapStateToProps, {
+  getToken,
+})(CardExampleCardProps);

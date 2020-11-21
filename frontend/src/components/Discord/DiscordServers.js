@@ -14,6 +14,7 @@ import {
   getDcServers,
   createTextChannel,
 } from "../../redux/actions/discordActions";
+import { getSubReddits } from "../../redux/actions/test";
 
 const DiscordServers = ({
   discord_channels,
@@ -21,7 +22,12 @@ const DiscordServers = ({
   token,
   createTextChannel,
   add_url,
+  getSubReddits,
 }) => {
+  React.useEffect(() => {
+    getSubReddits(token);
+  });
+
   const handleAddNewDiscordServer = () => {
     window.open(add_url, "_self");
   };
@@ -35,10 +41,11 @@ const DiscordServers = ({
         createTextChannel("Genel", channel_id, discord__id, token);
         getDcServers(token);
         console.log("ok");
+        channel_id = "";
       }
     } else {
       // Empty Area Error
-      console.log("no empty");
+      console.log("no empty1");
     }
   };
 
@@ -46,51 +53,63 @@ const DiscordServers = ({
     return (
       <List.Item>
         <List.Content>
-          <List.Header as="h2">
+          <List.Header as="h2" padded="very">
             {channel.name}
             {channel.text_channels.length === 0 ? (
               <>
-                <Label
-                  as="a"
-                  size="mini"
-                  pointing="left"
-                  horizontal
-                  color="red"
-                >
+                <Label as="a" compact size="small" pointing="left" color="red">
                   No text channel
                 </Label>
-                <Form
-                  onSubmit={(e) => handleAdd(e.target[0].value, channel.id)}
-                >
-                  <Input
-                    placeholder="Enter Text Channel ID"
-                    fluid
-                    transparent
-                  />
-                  <Divider />
-                  <Button basic fluid primary>
-                    Add Text Channel
-                  </Button>
-                </Form>
+                <Segment inverted>
+                  <Form
+                    onSubmit={(e) => {
+                      handleAdd(e.target[0].value, channel.id);
+                    }}
+                  >
+                    <Input
+                      icon="chain"
+                      iconPosition="left"
+                      placeholder="Enter Text Channel ID"
+                      transparent
+                      size="big"
+                    />{" "}
+                    <Button floated="right" compact basic color="grey">
+                      Add Text Channel
+                    </Button>
+                  </Form>
+                </Segment>
               </>
             ) : (
               <>
-                <Label as="a" size="mini" pointing="left" color="green">
+                <Label
+                  as="a"
+                  size="small"
+                  pointing="left"
+                  color="green"
+                  compact
+                  floated="right"
+                >
                   {channel.text_channels.length} active text channel
                 </Label>
-                <Form
-                  onSubmit={(e) => handleAdd(e.target[0].value, channel.id)}
-                >
-                  <Input
-                    placeholder="Enter Text Channel ID"
-                    fluid
-                    transparent
-                  />
-                  <Divider />
-                  <Button basic fluid primary>
-                    Add Text Channel
-                  </Button>
-                </Form>
+                <Segment inverted>
+                  <Form
+                    onSubmit={(e) => {
+                      console.log("dsa");
+                      handleAdd(e.target[0].value, channel.id);
+                    }}
+                  >
+                    <Input
+                      icon="chain"
+                      iconPosition="left"
+                      placeholder="Enter Text Channel ID"
+                      transparent
+                      size="big"
+                    />{" "}
+                    <Button floated="right" compact basic color="grey">
+                      Add Text Channel
+                    </Button>
+                  </Form>
+                </Segment>
               </>
             )}
           </List.Header>
@@ -101,8 +120,11 @@ const DiscordServers = ({
 
   return (
     <Segment inverted padded="very">
-      <Header as="h1" textAlign="center">
-        Active Servers <Label color="green">{discord_channels.length}</Label>
+      <Header as="h1">
+        Active Servers
+        <Label compact size="big" color="grey">
+          {discord_channels.length}
+        </Label>
       </Header>
       <Divider />
 
@@ -111,8 +133,8 @@ const DiscordServers = ({
       <List divided inverted relaxed>
         {discord_channels.map((channel) => serverList(channel))}
       </List>
-
-      <Button onClick={handleAddNewDiscordServer} compact circular fluid>
+      <Divider />
+      <Button onClick={handleAddNewDiscordServer} basic primary fluid>
         Add New Discord Server
       </Button>
     </Segment>
@@ -127,6 +149,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { getDcServers, createTextChannel })(
-  DiscordServers
-);
+export default connect(mapStateToProps, {
+  getDcServers,
+  createTextChannel,
+  getSubReddits,
+})(DiscordServers);
