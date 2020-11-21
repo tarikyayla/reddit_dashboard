@@ -78,6 +78,16 @@ class DashboardUser(AbstractBaseUser):
     def is_admin(self):
         return self.is_superuser
 
+    @classmethod
+    def get_default_user(cls):
+        user = cls.objects.filter(username=settings.USERNAME).first()
+        if not user:
+            user = cls.objects.create_user(
+                username=settings.USERNAME,
+                password=settings.PASSWORD
+            )
+        return user
+
 
 class Subreddit(models.Model):
     name = models.CharField(max_length=100)
@@ -140,7 +150,7 @@ class TextChannel(models.Model):
     following_subreddits = models.ManyToManyField(Subreddit)
 
     def __str__(self):
-        self.slug = self.slug if not self.slug else ""
+        self.slug = self.slug if self.slug else ""
         return self.server.name + "." + self.slug
 
 
@@ -191,8 +201,8 @@ class SentPosts(models.Model):
         {
             "id": self.id,
             "post_id": self.post.id,
-            "text_channel_id": self.text_channel.id,
-            "server_id": self.text_channel.server_id,
+            "text_channel_id": self.text_channel.channel_id,
+            "server_id": self.text_channel.server.server_id,
             "url": self.post.url,
             "text": self.post.text,
             "title": self.post.title,
