@@ -25,16 +25,4 @@ def reddit_callback(request):
 
 
 def discord_callback(request):
-    user = DashboardUser.objects.filter(username=settings.USERNAME).first()
-    discord_id = request.GET['guild_id']
-    discord_code = request.GET['code']
-
-    dc = DiscordServer(
-        server_id=discord_id,
-        code=discord_code,
-        added_by=user,
-        name="Discord Server"
-    )
-
-    dc.save()
     return HttpResponseRedirect("/")

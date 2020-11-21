@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  redis:
+    image: "redis"
+  web:
+    build: .
+    command: bash -c "python /code/manage.py migrate --noinput && python /code/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+  discord-bot:
+    build: .
+    command: bash -c "python /code/manage.py run_bot"
+    volumes:
+      - .:/code
+    depends_on:
+      - web
+  celery:
+    build: .
+    command: celery -A reddit_dashboard worker -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+    links:
+      - redis
+  celery-beat:
+    build: .
+    command: celery -A reddit_dashboard beat -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+    links:
+      - redis
