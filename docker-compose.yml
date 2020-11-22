@@ -12,6 +12,8 @@ services:
       - "8000:8000"
     depends_on:
       - redis
+    links:
+      - redis
   discord-bot:
     build: .
     command: bash -c "python /code/manage.py run_bot"
@@ -19,6 +21,8 @@ services:
       - .:/code
     depends_on:
       - web
+    links:
+      - redis
   celery:
     build: .
     command: celery -A reddit_dashboard worker -l info

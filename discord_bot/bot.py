@@ -7,7 +7,6 @@ from reddit_dashboard.redis_connection import REDIS_CONNECTION, RedisConsts
 from reddit_dashboard.redis_serializers import RedisModelSerializer
 
 
-
 REDIS_KEY = RedisConsts.DISCORD_PUSH
 client = discord.Client()
 
@@ -35,19 +34,27 @@ class PushPayload:
         )
 
 
-@tasks.loop(seconds=5)
+@tasks.loop(seconds=1)
 async def redis_listener():
+    await client.wait_until_ready()
     value = REDIS_CONNECTION.lpop(REDIS_KEY)
     if value:
         data = json.loads(value)
         data = PushPayload.serialize(data)
-        print(data.title)
+        url = 'https://reddit.com' + data.url
+        text = discord.Embed(
+            title=data.title,
+            url=url,
+            description=data.text)
+        subreddit = "r/" + data.url.split("/")[2]
+        text.set_author(url="https://reddit.com/" + subreddit, name=subreddit)
+        await client.get_guild(int(data.server_id)).get_channel(int(data.text_channel_id)).send(embed=text)
 
 
 @client.event
 async def on_ready():
-    print("BAĞLANDIK HIAMMMMINA!")
-    #redis_listener.start()
+    print("Bot connected")
+    redis_listener.start()
 
 
 @client.event
