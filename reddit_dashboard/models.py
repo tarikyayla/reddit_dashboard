@@ -196,6 +196,9 @@ class SentPosts(models.Model):
     text_channel = models.ForeignKey(TextChannel, on_delete=models.CASCADE, related_name="sent_posts_text_channel")
     SentDate = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = (('post', 'text_channel'),)
+
     def serialize(self):
         return json.dumps(
         {
