@@ -1,7 +1,7 @@
 import React from "react";
 import { Divider, Header, Input, Segment } from "semantic-ui-react";
-import { searchText } from "../../redux/actions/test";
-import { getSubReddits } from "../../redux/actions/test";
+import { searchText } from "../../redux/actions/redditActions";
+import { getSubReddits } from "../../redux/actions/redditActions";
 import { connect } from "react-redux";
 import SearchedItems from "./SearchedItems";
 

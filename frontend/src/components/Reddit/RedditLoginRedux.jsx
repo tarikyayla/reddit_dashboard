@@ -1,7 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button, Icon, Header, Image, Form, Grid } from "semantic-ui-react";
-import "./css/Login.css";
+import {
+  Button,
+  Icon,
+  Header,
+  Form,
+  Grid,
+  Segment,
+  Divider,
+} from "semantic-ui-react";
+import "./Login.css";
 
 const RedditLoginPage = ({ isRedditAuthActive, url }) => {
   const redditButton = () => {
@@ -13,22 +21,25 @@ const RedditLoginPage = ({ isRedditAuthActive, url }) => {
   return (
     <div className="redirect_page">
       <Grid textAlign="center" verticalAlign="middle">
-        <Grid.Column style={{ maxWidth: 450 }}>
-          <Header as="h2" textAlign="center">
-            <Image>
-              <Icon name="github" />
-            </Image>
-            Log-in to your account
+        {" "}
+        <Grid.Column>
+          {" "}
+          <Header as="h2" color="grey" textAlign="center">
+            <Icon name="reddit" /> Log-in to your account
           </Header>
-          <Form size="large">
-            <Button
-              onClick={() => redditButton()}
-              color="blue"
-              fluid
-              size="massive"
-            >
-              Reddit Login
-            </Button>
+          <Divider />
+          <Form>
+            <Segment raised inverted>
+              <Button
+                onClick={redditButton}
+                basic
+                color="grey"
+                fluid
+                size="big"
+              >
+                Login
+              </Button>
+            </Segment>
           </Form>
         </Grid.Column>
       </Grid>

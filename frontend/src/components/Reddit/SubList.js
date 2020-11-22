@@ -13,16 +13,19 @@ import {
   getDcServers,
   addSubredditToTextChannel,
 } from "../../redux/actions/discordActions";
-import { removeSubreddit } from "../../redux/actions/test";
-import "./css/Sublist.css";
+import { removeSubreddit } from "../../redux/actions/redditActions";
+import { useAlert } from "react-alert";
 
 const SubList = ({ subreddits, getDcServers, token, removeSubreddit }) => {
   React.useEffect(() => {
     getDcServers(token);
   }, [getDcServers, token]);
 
+  const alert = useAlert();
+
   const handleDeleteSubReddit = (id) => {
     removeSubreddit(id, token);
+    alert.error("Subreddit deleted!");
   };
 
   const list = (subreddit) => {

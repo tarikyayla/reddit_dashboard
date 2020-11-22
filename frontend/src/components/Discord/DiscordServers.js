@@ -14,7 +14,8 @@ import {
   getDcServers,
   createTextChannel,
 } from "../../redux/actions/discordActions";
-import { getSubReddits } from "../../redux/actions/test";
+import { getSubReddits } from "../../redux/actions/redditActions";
+import { useAlert } from "react-alert";
 
 const DiscordServers = ({
   discord_channels,
@@ -24,6 +25,8 @@ const DiscordServers = ({
   add_url,
   getSubReddits,
 }) => {
+  const alert = useAlert();
+
   React.useEffect(() => {
     getSubReddits(token);
   });
@@ -35,17 +38,14 @@ const DiscordServers = ({
   const handleAdd = (channel_id, discord__id) => {
     if (channel_id !== null && channel_id !== "" && discord__id !== undefined) {
       if (isNaN(channel_id)) {
-        // Number Error
-        console.log("pls enter a number");
+        alert.error("PLEASE ENTER A NUMBER !");
       } else {
         createTextChannel("Genel", channel_id, discord__id, token);
         getDcServers(token);
-        console.log("ok");
-        channel_id = "";
+        alert.success("TEXT CHANNEL ADDED SUCCESSFULLY !");
       }
     } else {
-      // Empty Area Error
-      console.log("no empty1");
+      alert.error("EMPTY AREA !");
     }
   };
 
@@ -72,9 +72,9 @@ const DiscordServers = ({
                       placeholder="Enter Text Channel ID"
                       transparent
                       size="big"
-                    />{" "}
-                    <Button floated="right" compact basic color="grey">
-                      Add Text Channel
+                    />
+                    <Button floated="right" compact basic color="green">
+                      Add
                     </Button>
                   </Form>
                 </Segment>
@@ -94,7 +94,6 @@ const DiscordServers = ({
                 <Segment inverted>
                   <Form
                     onSubmit={(e) => {
-                      console.log("dsa");
                       handleAdd(e.target[0].value, channel.id);
                     }}
                   >
@@ -104,9 +103,9 @@ const DiscordServers = ({
                       placeholder="Enter Text Channel ID"
                       transparent
                       size="big"
-                    />{" "}
-                    <Button floated="right" compact basic color="grey">
-                      Add Text Channel
+                    />
+                    <Button floated="right" compact basic color="green">
+                      Add
                     </Button>
                   </Form>
                 </Segment>

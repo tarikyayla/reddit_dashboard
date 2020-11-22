@@ -5,7 +5,6 @@ import {
   Segment,
   Icon,
   Pagination,
-  Container,
   Divider,
 } from "semantic-ui-react";
 import React from "react";
@@ -14,8 +13,8 @@ import {
   addSubreddit,
   getSubReddits,
   removeSubreddit,
-} from "../../redux/actions/test";
-
+} from "../../redux/actions/redditActions";
+import { useAlert } from "react-alert";
 import { connect } from "react-redux";
 
 const SearchedItems = ({
@@ -32,6 +31,8 @@ const SearchedItems = ({
 
   removeSubreddit,
 }) => {
+  const alert = useAlert();
+
   React.useEffect(() => {
     getSubReddits(token);
   }, [getSubReddits, token]);
@@ -52,10 +53,12 @@ const SearchedItems = ({
 
   const handleAddButton = (sub) => {
     addSubreddit(sub.id, token);
+    alert.success("SUBREDDIT ADDED !");
   };
 
   const handleRemoveButton = (id) => {
     removeSubreddit(id, token);
+    alert.error("SUBREDDIT DELETED !");
   };
 
   const renderButton = (sub) => {

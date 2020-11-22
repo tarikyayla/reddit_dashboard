@@ -1,17 +1,14 @@
 import React from "react";
 
 import { connect } from "react-redux";
-import { Button, Card, Header, Icon, Image, Segment } from "semantic-ui-react";
-import { getToken } from "../../redux/actions/test";
+import { Card, Header, Icon, Image, Segment } from "semantic-ui-react";
+import { getToken } from "../../redux/actions/redditActions";
 
 const CardExampleCardProps = ({ userData, username, getToken }) => {
   React.useEffect(() => {
     getToken();
   }, [getToken]);
 
-  const handleLogout = () => {
-    console.log("logged out");
-  };
   return (
     <>
       <Segment inverted textAlign="center">
@@ -27,11 +24,6 @@ const CardExampleCardProps = ({ userData, username, getToken }) => {
               <Icon name="reddit"></Icon> {userData.subscribers}{" "}
               <strong>subscribers</strong>
             </Card.Description>
-          </Card.Content>
-          <Card.Content extra>
-            <Button onClick={handleLogout} fluid color="red">
-              Logout
-            </Button>
           </Card.Content>
         </Card>
       </Segment>

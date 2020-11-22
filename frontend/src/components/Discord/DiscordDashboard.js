@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Container } from "semantic-ui-react";
-import { getToken, getSubReddits } from "../../redux/actions/test";
+import { getToken, getSubReddits } from "../../redux/actions/redditActions";
 import { getDcServers } from "../../redux/actions/discordActions";
 import DiscordNav from "./DiscordNav";
 

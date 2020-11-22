@@ -4,20 +4,12 @@
   min-height: calc(100% - 100px);
   background-size: cover;
   background-attachment: fixed;
-  /* background-image: url("https://images.unsplash.com/photo-1508615121316-fe792af62a63?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"); */
   background-color: #1b1c1d;
+  padding: 100px;
+  background-color: #1b1c1d;
+  height: 100vh;
 }
 
 .navbar {
   background-color: #202225;
-  padding: 10px 10px 10px 10px;
-}
-
-.footer {
-  margin-top: 1rem;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: wheat;
 }

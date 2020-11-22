@@ -19,8 +19,9 @@ from reddit_dashboard.views import dashboard, reddit_callback, discord_callback
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", dashboard),
+    path('', dashboard),
     path('api/', include('api.urls')),
     path('reddit_redict_url/', reddit_callback),
     path('discord_redirect', discord_callback),
+
 ]

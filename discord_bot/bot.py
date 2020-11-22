@@ -45,10 +45,17 @@ async def redis_listener():
         text = discord.Embed(
             title=data.title,
             url=url,
-            description=data.text)
+            description=data.text[:100])
         subreddit = "r/" + data.url.split("/")[2]
         text.set_author(url="https://reddit.com/" + subreddit, name=subreddit)
-        await client.get_guild(int(data.server_id)).get_channel(int(data.text_channel_id)).send(embed=text)
+        guild = client.get_guild(int(data.server_id))
+        if guild:
+            channel = guild.get_channel(int(data.text_channel_id))
+            if channel:
+                try:
+                    await client.get_guild(int(data.server_id)).get_channel(int(data.text_channel_id)).send(embed=text)
+                except:
+                    print(f"Submission sent error : {data.id}")
 
 
 @client.event

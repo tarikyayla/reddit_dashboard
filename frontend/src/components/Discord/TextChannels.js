@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-
 import {
   Divider,
   Header,
@@ -12,7 +11,6 @@ import {
   Popup,
   Icon,
   Image,
-  Card,
   Item,
 } from "semantic-ui-react";
 import {
@@ -20,9 +18,8 @@ import {
   getDcServers,
   addSubredditToTextChannel,
 } from "../../redux/actions/discordActions";
-
-import { success } from "../../redux/actions/alertActions";
-import { getSubReddits } from "../../redux/actions/test";
+import { getSubReddits } from "../../redux/actions/redditActions";
+import { useAlert } from "react-alert";
 
 const TextChannels = ({
   discord_channels,
@@ -31,11 +28,13 @@ const TextChannels = ({
   getDcServers,
   subreddits,
   addSubredditToTextChannel,
-  success,
   getSubReddits,
 }) => {
+  const alert = useAlert();
+
   const handleDeleteTextChannel = (textChannelId) => {
     deleteTextChannel(token, textChannelId);
+    alert.error("TEXT CHANNEL DELETED!");
     getDcServers(token);
     getDcServers(token);
   };
@@ -44,8 +43,7 @@ const TextChannels = ({
     addSubredditToTextChannel(idForFetch, idForSubreddit, token);
     getSubReddits(token);
     getDcServers(token);
-
-    success();
+    alert.success(`${subredditName} added!`);
   };
 
   return (
@@ -246,6 +244,5 @@ export default connect(mapStateToProps, {
   deleteTextChannel,
   getDcServers,
   addSubredditToTextChannel,
-  success,
   getSubReddits,
 })(TextChannels);

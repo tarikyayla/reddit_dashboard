@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework import generics, viewsets
 from api.responses import SUCCESS_RESPONSE, FAIL_RESPONSE
-from api.reddit.manager import reddit_manager
+from api.reddit.manager import reddit_manager, RedditManager
 from api.serializers import StandardResultsSetPagination
 from reddit_dashboard.models import Subreddit
 from reddit_dashboard import logger
@@ -56,6 +56,11 @@ class Subreddits(viewsets.ModelViewSet):
 
     def list(self, requests):
         queryset = requests.user.subreddits.all()
+        if requests.GET.get("name"):
+            print("name -->", requests.GET["name"])
+            query = requests.user.subreddits.filter(name__contains=requests.GET["name"])
+            serializer = SubredditSerializer(query, many=True)
+            return Response(serializer.data)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -105,7 +110,8 @@ class SearchSubreddit(generics.ListAPIView):
         if not search_text:
             return []
 
-        results = reddit_manager.search_by_subreddit(search_text)
+        manager = RedditManager()
+        results = manager.search_by_subreddit(search_text)
 
         for result in results:
             Subreddit.create(result, self.request.user)
