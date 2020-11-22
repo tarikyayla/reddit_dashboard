@@ -16,7 +16,9 @@ import asyncio
 # celery -A reddit_dashboard worker --pool=solo -l info // for windows
 
 
-@periodic_task(run_every=crontab(minute=0, hour='10, 22'))
+#@periodic_task(run_every=crontab(minute=0, hour='10, 22'))
+
+@periodic_task(run_every=timedelta(seconds=30))
 def get_hot_posts():
     print("GETTING HOT POSTS!")
     following_subreddits = []
