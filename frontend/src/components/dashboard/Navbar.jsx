@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Menu, Segment } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { searchText } from "../../redux/actions/test";
+import { searchText } from "../../redux/actions/redditActions";
 import { connect } from "react-redux";
 class Navbar extends Component {
   state = { activeItem: "home" };
@@ -9,11 +9,6 @@ class Navbar extends Component {
 
   render() {
     const { activeItem } = this.state;
-
-    // const handleSearchText = (e) => {
-    //   let text = e.target.value;
-    //   this.props.searchText(text, this.props.token);
-    // };
 
     return (
       <Segment inverted>
@@ -28,8 +23,8 @@ class Navbar extends Component {
 
           <Link to="/subreddits">
             <Menu.Item
-              name="follow list"
-              active={activeItem === "follow list"}
+              name="reddit follow list"
+              active={activeItem === "reddit"}
               onClick={this.handleItemClick}
             />
           </Link>
@@ -44,20 +39,6 @@ class Navbar extends Component {
               />
             </Link>
           </Menu.Menu>
-
-          {/* <Menu.Menu position="right">
-          <Link to="search">
-            <Menu.Item>
-              <Input
-                inverted
-                size="mini"
-                icon="reddit"
-                placeholder="Search Subreddits..."
-                onChange={handleSearchText}
-              />
-            </Menu.Item>
-          </Link>
-        </Menu.Menu> */}
         </Menu>
       </Segment>
     );

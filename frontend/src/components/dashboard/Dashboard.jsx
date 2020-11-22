@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getToken, btnClicked } from "../../redux/actions/test";
+import { getToken, btnClicked } from "../../redux/actions/redditActions";
 import RedditLoginRedux from "../Reddit/RedditLoginRedux";
-import { getUserDataFail } from "../../redux/actions/test";
+import { getUserDataFail } from "../../redux/actions/redditActions";
 import SubReddits from "../Reddit/SubReddits";
 import { Container } from "semantic-ui-react";
 

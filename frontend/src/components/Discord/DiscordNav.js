@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getToken, getSubReddits } from "../../redux/actions/test";
+import { getToken, getSubReddits } from "../../redux/actions/redditActions";
 import { getDcServers } from "../../redux/actions/discordActions";
 import { Grid, Segment, Menu, Button } from "semantic-ui-react";
 import TextChannels from "./TextChannels";

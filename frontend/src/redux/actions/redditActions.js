@@ -1,5 +1,4 @@
 import axios from "axios";
-
 export const getToken = () => (dispatch) => {
   axios.get("api/get-api-token").then((res) => {
     const token = res.data.token;
@@ -44,26 +43,6 @@ export const getUserDataFail = (url) => (dispatch) => {
     type: "GET_USER_DATA_FAIL",
     payload: url,
   });
-};
-
-export const getSubReddits = (token) => (dispatch) => {
-  axios
-    .get("/api/subreddits", {
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-        Authorization: token,
-      },
-    })
-    .then((resp) =>
-      dispatch({
-        type: "GET_SUBREDDITS",
-        payload: {
-          subreddits: resp.data,
-          totalResults: resp.data.count,
-        },
-      })
-    );
 };
 
 export const searchText = (text, token) => (dispatch) => {
@@ -168,10 +147,6 @@ export const addSubreddit = (id, token) => (dispatch) => {
 };
 
 export const removeSubreddit = (id, token) => (dispatch) => {
-  dispatch({
-    type: "LOADING",
-  });
-
   fetch(`api/subreddits/${id}`, {
     method: "DELETE",
     body: JSON.stringify({
@@ -191,14 +166,39 @@ export const removeSubreddit = (id, token) => (dispatch) => {
           subreddit_id: id,
         },
       });
+
       dispatch(getSubReddits(token));
     })
     .catch((err) => console.log(err.message));
-  dispatch({ type: "LOADED" });
 };
 
-export const logout = () => {
-  return {
-    type: "LOGOUT",
-  };
+export const getSubReddits = (token) => (dispatch) => {
+  axios
+    .get("/api/subreddits", {
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: token,
+      },
+    })
+    .then((resp) =>
+      dispatch({
+        type: "GET_SUBREDDITS",
+        payload: {
+          subreddits: resp.data,
+          totalResults: resp.data.count,
+        },
+      })
+    );
+
+  axios
+    .get("api/refresh-subreddits", {
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: token,
+      },
+    })
+    .then((resp) => dispatch({ type: "REFRESH_SUBREDDITS" }))
+    .catch((err) => console.log(err.message));
 };

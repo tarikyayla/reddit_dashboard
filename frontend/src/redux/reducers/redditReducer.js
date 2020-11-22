@@ -134,39 +134,10 @@ export default function (state = initialState, action) {
     };
   }
 
-  if (action.type === "LOGOUT") {
+  if (action.type === "REFRESH_SUBREDDITS") {
     return {
       ...state,
-      redditLoginBtn: false,
-      isLoading: false,
-      getListOfSubReddits: false,
-      token: null,
-
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-        Authorization: null,
-      },
-
-      user: null,
-
-      redditAuth: {
-        active: false,
-        username: null,
-        userDetail: {},
-        redirect_link: null,
-      },
-      subreddits: {},
-      totalResults: 0,
-      currentPage: 1,
-      search: {
-        searchTerm: "",
-        data: null,
-        next: null,
-        previous: null,
-      },
     };
   }
-
   return state;
 }

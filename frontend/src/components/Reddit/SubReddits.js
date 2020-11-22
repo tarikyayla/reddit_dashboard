@@ -1,11 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Button, Popup } from "semantic-ui-react";
-import { getSubReddits } from "../../redux/actions/test";
-import "./css/SubReddits.css";
-import SubList from "./SubList";
+import { getSubReddits } from "../../redux/actions/redditActions";
 
-const SubReddits = ({ getSubReddits, token, btnActive, user }) => {
+import SubList from "./SubList";
+import { useAlert } from "react-alert";
+
+const SubReddits = ({ getSubReddits, token, btnActive }) => {
+  const alert = useAlert();
+
   React.useEffect(() => {
     getSubReddits(token);
   }, [token, getSubReddits]);
@@ -22,7 +25,10 @@ const SubReddits = ({ getSubReddits, token, btnActive, user }) => {
             floated="right"
             basic
             color="green"
-            onClick={() => getSubReddits(token)}
+            onClick={() => {
+              getSubReddits(token);
+              alert.success("REFRESHED !");
+            }}
             icon="refresh"
           />
         }
