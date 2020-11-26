@@ -6,6 +6,7 @@ const initialState = {
   msg: null,
   discord_channels: [],
   text_channels: {},
+  searchedFollowList: { data: [] },
 };
 
 export default function (state = initialState, action) {
@@ -58,6 +59,16 @@ export default function (state = initialState, action) {
       textChannels: {
         ...state.text_channels,
         textChannel: action.payload.textChannel,
+      },
+    };
+  }
+
+  if (action.type === "SEARCH_FOLLOWING_LIST") {
+    return {
+      ...state,
+      searchedFollowList: {
+        ...state.searchedFollowList,
+        data: action.payload.data,
       },
     };
   }

@@ -21,6 +21,14 @@ const initialState = {
   subreddits: {},
   totalResults: 0,
   currentPage: 1,
+  currentPageForList: 1,
+
+  listPagination: {
+    next: null,
+    prev: null,
+    data: null,
+  },
+
   search: {
     searchTerm: "",
     data: null,
@@ -97,7 +105,7 @@ export default function (state = initialState, action) {
         searchTerm: action.payload.searchTerm,
         data: action.payload.data,
         next: action.payload.next,
-        previous: action.payload.previous,
+        prev: action.payload.previous,
       },
     };
   }
@@ -111,6 +119,19 @@ export default function (state = initialState, action) {
         next: action.payload.next,
         previous: action.payload.previous,
         data: action.payload.data,
+      },
+    };
+  }
+
+  if (action.type === "LIST_PAGINATION") {
+    return {
+      ...state,
+      currentPageForList: action.payload.currentPage,
+      subreddits: {
+        ...state.subreddits,
+        next: action.payload.next,
+        previous: action.payload.previous,
+        results: action.payload.data.results,
       },
     };
   }

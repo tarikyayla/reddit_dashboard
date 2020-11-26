@@ -115,6 +115,59 @@ export const pagination = (url, token, searchTerm, currentPage = 1) => (
       );
   }
 };
+export const subredditsListPagination = (
+  url,
+  token,
+  searchTerm,
+  currentPage = 1
+) => (dispatch) => {
+  if (url !== null || url === undefined) {
+    let parseUrl = url.slice(21);
+
+    axios
+      .get(parseUrl, {
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+          Authorization: token,
+        },
+      })
+      .then((resp) =>
+        dispatch({
+          type: "LIST_PAGINATION",
+          payload: {
+            next: resp.data.next,
+            previous: resp.data.previous,
+            data: resp.data,
+            currentPage: currentPage,
+          },
+        })
+      );
+  } else {
+    if (searchTerm !== null) {
+      url = `/api/subreddits?name=${searchTerm}&page=${currentPage}`;
+    }
+    axios
+      .get(`/api/subreddits?&page=${currentPage}`, {
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+          Authorization: token,
+        },
+      })
+      .then((resp) =>
+        dispatch({
+          type: "LIST_PAGINATION",
+          payload: {
+            next: resp.data.next,
+            previous: resp.data.previous,
+            data: resp.data,
+            currentPage: currentPage,
+          },
+        })
+      );
+  }
+};
 
 export const addSubreddit = (id, token) => (dispatch) => {
   dispatch({

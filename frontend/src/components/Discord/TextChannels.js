@@ -7,18 +7,20 @@ import {
   List,
   Segment,
   Button,
-  Dropdown,
   Popup,
   Icon,
   Image,
   Item,
+  Dropdown,
 } from "semantic-ui-react";
 import {
   deleteTextChannel,
   getDcServers,
   addSubredditToTextChannel,
+  searchFollowingSubreddits,
 } from "../../redux/actions/discordActions";
 import { getSubReddits } from "../../redux/actions/redditActions";
+
 import { useAlert } from "react-alert";
 
 const TextChannels = ({
@@ -29,23 +31,29 @@ const TextChannels = ({
   subreddits,
   addSubredditToTextChannel,
   getSubReddits,
+  searchedFollowList,
+  searchFollowingSubreddits,
 }) => {
   const alert = useAlert();
 
+  const handleChange = (e) => {
+    let text = e.target.value.trim();
+    if (searchedFollowList !== [] && text !== "") {
+      searchFollowingSubreddits(text, token);
+    }
+  };
   const handleDeleteTextChannel = (textChannelId) => {
     deleteTextChannel(token, textChannelId);
     alert.error("TEXT CHANNEL DELETED!");
     getDcServers(token);
     getDcServers(token);
   };
-
   const handleDropData = (subredditName, idForFetch, idForSubreddit) => {
     addSubredditToTextChannel(idForFetch, idForSubreddit, token);
     getSubReddits(token);
     getDcServers(token);
     alert.success(`${subredditName} added!`);
   };
-
   return (
     <Segment inverted padded="very">
       <Header as="h1">Text Channels</Header> <Divider />
@@ -99,32 +107,54 @@ const TextChannels = ({
                   ) : (
                     <List.Content floated="right">
                       <Dropdown
+                        selection
                         scrolling
-                        button
+                        search
                         compact
+                        selectedLabel
                         placeholder="add subreddit to this channel"
+                        onSearchChange={handleChange}
                       >
-                        <Dropdown.Menu>
-                          {subreddits.results.map((subreddit) => (
-                            <Dropdown.Item
-                              onClick={(e) => {
-                                handleDropData(
-                                  e.target.innerText,
-                                  textChannel.id,
-                                  subreddit.id
-                                );
-                              }}
-                            >
-                              <Icon name="reddit" /> {subreddit.name}
-                            </Dropdown.Item>
-                          ))}
-                        </Dropdown.Menu>
+                        {searchedFollowList.length > 0 ? (
+                          <Dropdown.Menu>
+                            {searchedFollowList.map((searchedItem) => (
+                              <Dropdown.Item
+                                key={searchedItem.id}
+                                onClick={(e) => {
+                                  handleDropData(
+                                    e.target.innerText,
+                                    textChannel.id,
+                                    searchedItem.id
+                                  );
+                                }}
+                              >
+                                <Icon name="reddit" /> {searchedItem.name}
+                              </Dropdown.Item>
+                            ))}
+                          </Dropdown.Menu>
+                        ) : (
+                          <Dropdown.Menu>
+                            {subreddits.results.map((subreddit) => (
+                              <Dropdown.Item
+                                onClick={(e) => {
+                                  handleDropData(
+                                    e.target.innerText,
+                                    textChannel.id,
+                                    subreddit.id
+                                  );
+                                }}
+                              >
+                                <Icon name="reddit" /> {subreddit.name}
+                              </Dropdown.Item>
+                            ))}
+                          </Dropdown.Menu>
+                        )}
                       </Dropdown>
                     </List.Content>
                   )}
                   <List.Content>
                     <List.Header>
-                      <Icon size="large" name="discord" /> Channel Name :{" "}
+                      <Icon size="large" name="discord" /> Channel Name :
                       {textChannel.slug}
                     </List.Header>
                     <Icon size="large" /> Channel ID :
@@ -134,7 +164,6 @@ const TextChannels = ({
                   <Segment inverted vertical>
                     {textChannel.following_subreddits.length > 0 ? (
                       <>
-                        {" "}
                         <Header>
                           <Button basic color="green" compact fluid>
                             Following Subreddits
@@ -237,6 +266,7 @@ const mapStateToProps = (state) => {
     discord_channels: state.discord.discord_channels,
     add_url: state.discord.add_url,
     subreddits: state.test.subreddits,
+    searchedFollowList: state.discord.searchedFollowList.data,
   };
 };
 
@@ -245,4 +275,5 @@ export default connect(mapStateToProps, {
   getDcServers,
   addSubredditToTextChannel,
   getSubReddits,
+  searchFollowingSubreddits,
 })(TextChannels);

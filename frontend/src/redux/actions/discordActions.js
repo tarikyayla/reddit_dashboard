@@ -121,3 +121,23 @@ export const getFollowingSubreddits = (textChannelId, token) => (dispatch) => {
     )
     .catch((err) => console.log(err.message));
 };
+
+export const searchFollowingSubreddits = (searchTerm, token) => (dispatch) => {
+  axios
+    .get(`api/subreddits?name=${searchTerm}`, {
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: token,
+      },
+    })
+    .then((resp) =>
+      dispatch({
+        type: "SEARCH_FOLLOWING_LIST",
+        payload: {
+          data: resp.data,
+        },
+      })
+    )
+    .catch((err) => console.log(err.message));
+};
