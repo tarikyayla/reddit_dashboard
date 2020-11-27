@@ -1,10 +1,11 @@
 import React, { Component } from "react";
+// REDUX IMPORTS
 import { connect } from "react-redux";
-import { getToken, btnClicked } from "../../redux/actions/redditActions";
+import { getToken, getUserDataFail } from "../../redux/actions/redditActions";
 import RedditLoginRedux from "../Reddit/RedditLoginRedux";
-import { getUserDataFail } from "../../redux/actions/redditActions";
-import SubReddits from "../Reddit/SubReddits";
+// UI
 import { Container } from "semantic-ui-react";
+import SubReddits from "../Reddit/SubReddits";
 
 class Dashboard extends Component {
   componentDidMount() {
@@ -30,7 +31,6 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    isLoginActive: state.test.redditLoginBtn,
     url: state.test.redditAuth.redirect_link,
     user: state.test.user,
     token: state.test.token,
@@ -40,5 +40,4 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   getUserDataFail,
   getToken,
-  btnClicked,
 })(Dashboard);

@@ -1,18 +1,16 @@
 import React from "react";
-import Dashboard from "./components/dashboard/Dashboard";
-import DiscordDashboard from "./components/Discord/DiscordDashboard";
-import { Route } from "react-router-dom";
-import Navbar from "./components/dashboard/Navbar";
-import UserCard from "./components/Reddit/UserCard";
-import SearchedItems from "./components/Reddit/SearchedItems";
-import { transitions, positions, Provider as AlertProvider } from "react-alert";
-import AlertTemplate from "react-alert-template-basic";
-import "./App.css";
-import { Container } from "semantic-ui-react";
+// REDUX IMPORTS
 import { connect } from "react-redux";
 import { getToken } from "./redux/actions/redditActions";
+import DiscordDashboard from "./components/Discord/DiscordDashboard";
 import RedditLoginRedux from "./components/Reddit/RedditLoginRedux";
+// ALERT
+import { transitions, positions, Provider as AlertProvider } from "react-alert";
+import AlertTemplate from "react-alert-template-basic";
+// CUSTOM CSS
+import "./App.css";
 
+// ALERT OPTIONS
 const options = {
   position: positions.TOP_CENTER,
   timeout: 3500,
@@ -30,13 +28,7 @@ const App = ({ getToken, user }) => {
         <RedditLoginRedux />
       ) : (
         <div className="main">
-          <Container fluid>
-            <Navbar />
-            <Route path="/" exact component={DiscordDashboard} />
-            <Route path="/subreddits" exact component={Dashboard} />
-            <Route path="/profile" exact component={UserCard} />
-            <Route path="/search" exact component={SearchedItems} />
-          </Container>{" "}
+          <DiscordDashboard />
         </div>
       )}
     </AlertProvider>

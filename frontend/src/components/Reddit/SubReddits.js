@@ -1,21 +1,34 @@
 import React from "react";
+// REDUX IMPORTS
 import { connect } from "react-redux";
+import {
+  getSubReddits,
+  refreshSubreddits,
+} from "../../redux/actions/redditActions";
+// UI
 import { Button, Popup } from "semantic-ui-react";
-import { getSubReddits } from "../../redux/actions/redditActions";
-
 import SubList from "./SubList";
+// ALERT
 import { useAlert } from "react-alert";
 
-const SubReddits = ({ getSubReddits, token, btnActive }) => {
+const SubReddits = ({ token, getSubReddits }) => {
   const alert = useAlert();
 
   React.useEffect(() => {
     getSubReddits(token);
-  }, [token, getSubReddits]);
+  }, [getSubReddits, token]);
+
+  const handleRefreshSubreddit = () => {
+    getSubReddits(token);
+    refreshSubreddits(token);
+    alert.success("REFRESHED !");
+  };
 
   return (
     <>
-      {btnActive ? <SubList /> : null}
+      {/* LIST OF SUBREDDITS */}
+      <SubList />
+      {/* REFRESH BUTTON */}
       <Popup
         content="Refresh stack."
         mouseEnterDelay={200}
@@ -25,10 +38,7 @@ const SubReddits = ({ getSubReddits, token, btnActive }) => {
             floated="right"
             basic
             color="green"
-            onClick={() => {
-              getSubReddits(token);
-              alert.success("REFRESHED !");
-            }}
+            onClick={handleRefreshSubreddit}
             icon="refresh"
           />
         }
@@ -39,17 +49,11 @@ const SubReddits = ({ getSubReddits, token, btnActive }) => {
 
 const mapStateToProps = (state) => {
   return {
-    subreddits: state.test.subreddits,
     token: state.test.token,
-    btnActive: state.test.getListOfSubReddits,
-    user: state.test.user,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getSubReddits: (token) => dispatch(getSubReddits(token)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(SubReddits);
+export default connect(mapStateToProps, {
+  getSubReddits,
+  refreshSubreddits,
+})(SubReddits);

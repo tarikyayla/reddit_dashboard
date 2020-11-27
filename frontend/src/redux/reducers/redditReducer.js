@@ -1,17 +1,12 @@
+import * as actionTypes from "../actions/actionTypes";
+
 const initialState = {
-  redditLoginBtn: false,
   isLoading: false,
   getListOfSubReddits: false,
   token: null,
 
-  headers: {
-    Accept: "application/json",
-    "Content-type": "application/json",
-    Authorization: null,
-  },
-
   user: null,
-
+  added: false,
   redditAuth: {
     active: false,
     username: null,
@@ -21,6 +16,14 @@ const initialState = {
   subreddits: {},
   totalResults: 0,
   currentPage: 1,
+  currentPageForList: 1,
+
+  listPagination: {
+    next: null,
+    prev: null,
+    data: null,
+  },
+
   search: {
     searchTerm: "",
     data: null,
@@ -30,24 +33,21 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
-  if (action.type === "GET_TOKEN") {
+  if (action.type === actionTypes.GET_TOKEN) {
     return {
       ...state,
       token: action.payload,
-      headers: {
-        ...state.headers,
-        Authorization: action.payload,
-      },
     };
   }
 
-  if (action.type === "FETCH_USER_AUTH") {
+  if (action.type === actionTypes.FETCH_USER_AUTH) {
     return {
       ...state,
       user: action.payload,
     };
   }
-  if (action.type === "GET_USER_DATA") {
+
+  if (action.type === actionTypes.GET_USER_DATA) {
     return {
       ...state,
       redditAuth: {
@@ -59,14 +59,7 @@ export default function (state = initialState, action) {
     };
   }
 
-  if (action.type === "CLICK_LOGIN_BTN") {
-    return {
-      ...state,
-      redditLoginBtn: true,
-    };
-  }
-
-  if (action.type === "GET_USER_DATA_FAIL") {
+  if (action.type === actionTypes.GET_USER_DATA_FAIL) {
     return {
       ...state,
       redditAuth: {
@@ -79,7 +72,7 @@ export default function (state = initialState, action) {
     };
   }
 
-  if (action.type === "GET_SUBREDDITS") {
+  if (action.type === actionTypes.GET_SUBREDDITS) {
     return {
       ...state,
       subreddits: action.payload.subreddits,
@@ -88,7 +81,11 @@ export default function (state = initialState, action) {
     };
   }
 
-  if (action.type === "SEARCH_TEXT") {
+  if (action.type === actionTypes.REFRESH_SUBREDDITS) {
+    return state;
+  }
+
+  if (action.type === actionTypes.SEARCH_TEXT) {
     return {
       ...state,
       totalResults: action.payload.totalResults,
@@ -97,12 +94,12 @@ export default function (state = initialState, action) {
         searchTerm: action.payload.searchTerm,
         data: action.payload.data,
         next: action.payload.next,
-        previous: action.payload.previous,
+        prev: action.payload.previous,
       },
     };
   }
 
-  if (action.type === "PAGINATION") {
+  if (action.type === actionTypes.PAGINATION) {
     return {
       ...state,
       currentPage: action.payload.currentPage,
@@ -115,29 +112,31 @@ export default function (state = initialState, action) {
     };
   }
 
-  if (action.type === "ADD_SUBREDDIT") {
-    return state;
-  }
-  if (action.type === "REMOVE_SUBREDDIT") {
-    return state;
-  }
-  if (action.type === "LOADING") {
+  if (action.type === actionTypes.LIST_PAGINATION) {
     return {
       ...state,
-      isLoading: true,
-    };
-  }
-  if (action.type === "LOADED") {
-    return {
-      ...state,
-      isLoading: false,
+      currentPageForList: action.payload.currentPage,
+      subreddits: {
+        ...state.subreddits,
+        next: action.payload.next,
+        previous: action.payload.previous,
+        results: action.payload.data.results,
+      },
     };
   }
 
-  if (action.type === "REFRESH_SUBREDDITS") {
+  if (action.type === actionTypes.ADD_SUBREDDIT) {
     return {
       ...state,
+      added: true,
     };
   }
+  if (action.type === actionTypes.REMOVE_SUBREDDIT) {
+    return {
+      ...state,
+      added: false,
+    };
+  }
+
   return state;
 }
