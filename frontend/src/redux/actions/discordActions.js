@@ -2,10 +2,6 @@ import axios from "axios";
 import * as actionTypes from "./actionTypes";
 
 export const getDcServers = (token) => (dispatch) => {
-  dispatch({
-    type: actionTypes.GET_REQ,
-  });
-
   axios
     .get("/api/discord", {
       headers: {
@@ -23,14 +19,7 @@ export const getDcServers = (token) => (dispatch) => {
         },
       })
     )
-    .catch((err) =>
-      dispatch({
-        type: actionTypes.GET_REQ_FAIL,
-        payload: {
-          msg: err.message,
-        },
-      })
-    );
+    .catch((err) => console.log(err.message));
 };
 
 export const createTextChannel = (slug, channel_id, discord_id, token) => (
@@ -116,6 +105,26 @@ export const getFollowingSubreddits = (textChannelId, token) => (dispatch) => {
         type: actionTypes.GET_FOLLOWING_SUBREDDITS,
         payload: {
           textChannel: resp.data,
+        },
+      })
+    )
+    .catch((err) => console.log(err.message));
+};
+
+export const searchFollowingSubreddits = (searchTerm, token) => (dispatch) => {
+  axios
+    .get(`api/subreddits?name=${searchTerm}`, {
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: token,
+      },
+    })
+    .then((resp) =>
+      dispatch({
+        type: actionTypes.SEARCH_FOLLOWING_LIST,
+        payload: {
+          data: resp.data,
         },
       })
     )

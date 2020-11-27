@@ -27,15 +27,8 @@ const SearchedItems = ({
   token,
   totalResults,
   addSubreddit,
-  getSubReddits,
-
-  removeSubreddit,
 }) => {
   const alert = useAlert();
-
-  React.useEffect(() => {
-    getSubReddits(token);
-  }, [getSubReddits, token]);
 
   const handlePagination = (e) => {
     let target = e.target.text;
@@ -53,50 +46,14 @@ const SearchedItems = ({
 
   const handleAddButton = (sub) => {
     addSubreddit(sub.id, token);
-    alert.success("SUBREDDIT ADDED !");
-  };
-
-  const handleRemoveButton = (id) => {
-    removeSubreddit(id, token);
-    alert.error("SUBREDDIT DELETED !");
-  };
-
-  const renderButton = (sub) => {
-    var added = false;
-
-    subreddits.results.forEach((element) => {
-      if (sub.id === element.id) {
-        added = true;
-      }
-    });
-
-    if (added) {
-      return (
-        <Button icon onClick={() => handleRemoveButton(sub.id)} color="red">
-          <Icon name="remove circle" />
-        </Button>
-      );
-    }
-
-    return (
-      <Button
-        onClick={(e) => {
-          handleAddButton(sub);
-        }}
-        basic
-        icon
-        color="grey"
-      >
-        <Icon name="plus" />
-      </Button>
-    );
+    alert.success(`${sub.name} added !`);
   };
 
   if (searchResult !== null && text !== "") {
     return (
       <Segment inverted>
         {searchResult.results.map((sub) => (
-          <List selection divided inverted>
+          <List selection divided inverted key={sub.id}>
             <List.Item>
               {sub.icon_img === null ||
               sub.icon_img === "" ||
@@ -109,8 +66,20 @@ const SearchedItems = ({
                 <Image src={sub.icon_img} avatar />
               )}
               <List.Content>{sub.name}</List.Content>
-
-              <List.Content floated="right">{renderButton(sub)}</List.Content>
+              <List.Content floated="right">
+                {
+                  <Button
+                    onClick={(e) => {
+                      handleAddButton(sub);
+                    }}
+                    basic
+                    icon
+                    color="green"
+                  >
+                    <Icon name="plus" />
+                  </Button>
+                }
+              </List.Content>
             </List.Item>
             <Divider />
           </List>
@@ -137,6 +106,7 @@ const SearchedItems = ({
 
 const mapStateToProps = (state) => {
   return {
+    added: state.test.added,
     searchResult: state.test.search.data,
     subreddits: state.test.subreddits,
     totalResults: state.test.totalResults,

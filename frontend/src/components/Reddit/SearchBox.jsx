@@ -1,23 +1,28 @@
 import React from "react";
-import { Divider, Header, Input, Segment } from "semantic-ui-react";
-import { searchText } from "../../redux/actions/redditActions";
-import { getSubReddits } from "../../redux/actions/redditActions";
+// REDUX IMPORTS
 import { connect } from "react-redux";
-import SearchedItems from "./SearchedItems";
-
-const SearchBox = ({ searchText, token, getSubReddits }) => {
-  React.useEffect(() => {
-    getSubReddits(token);
-  }, [token, getSubReddits]);
-
+import {
+  searchText,
+  getSubReddits,
+  pagination,
+  addSubreddit,
+  removeSubreddit,
+  refreshSubreddits,
+} from "../../redux/actions/redditActions";
+// UI
+import { Divider, Header, Input, Segment } from "semantic-ui-react";
+// COMP
+import SeachedItems from "./SearchedItems";
+const SearchBox = ({ searchText, token }) => {
+  // SEARCH FUNC
   const handleChange = (e) => {
     let text = e.target.value;
     searchText(text, token);
   };
 
   return (
-    <Segment fluid inverted>
-      <Header color="grey" textAlign="center">
+    <Segment inverted padded="very">
+      <Header as="h1" color="grey" textAlign="center">
         Search any subreddit ...
       </Header>
       <Input
@@ -28,7 +33,8 @@ const SearchBox = ({ searchText, token, getSubReddits }) => {
         transparent
       />
       <Divider />
-      <SearchedItems />
+      {/* SEARCHED LIST */}
+      <SeachedItems />
     </Segment>
   );
 };
@@ -36,9 +42,23 @@ const SearchBox = ({ searchText, token, getSubReddits }) => {
 const mapStateToProps = (state) => {
   return {
     token: state.test.token,
+    searchResult: state.test.search.data,
+    subreddits: state.test.subreddits,
+    totalResults: state.test.totalResults,
+    text: state.test.search.searchTerm,
+    next: state.test.search.next,
+    previous: state.test.search.previous,
+    currentPage: state.test.currentPage,
+    addSubredditBtn: state.test.addSubredditBtn,
+    isLoading: state.test.isLoading,
   };
 };
 
-export default connect(mapStateToProps, { searchText, getSubReddits })(
-  SearchBox
-);
+export default connect(mapStateToProps, {
+  searchText,
+  getSubReddits,
+  pagination,
+  addSubreddit,
+  removeSubreddit,
+  refreshSubreddits,
+})(SearchBox);
