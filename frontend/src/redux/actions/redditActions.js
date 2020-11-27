@@ -1,12 +1,16 @@
 import axios from "axios";
+import * as actionTypes from "./actionTypes";
+
+// GET TOKEN
 export const getToken = () => (dispatch) => {
   axios.get("api/get-api-token").then((res) => {
     const token = res.data.token;
-    dispatch({ type: "GET_TOKEN", payload: token });
+    dispatch({ type: actionTypes.GET_TOKEN, payload: token });
     dispatch(fetchUserAuth(token));
   });
 };
 
+// GET USER DATA
 export const fetchUserAuth = (token) => (dispatch) => {
   axios
     .get("/api/reddit-auth", {
@@ -19,35 +23,26 @@ export const fetchUserAuth = (token) => (dispatch) => {
     .then((user) => {
       if (user.data.active) {
         dispatch({
-          type: "FETCH_USER_AUTH",
+          type: actionTypes.FETCH_USER_AUTH,
           payload: user.data,
         });
         dispatch({
-          type: "GET_USER_DATA",
+          type: actionTypes.GET_USER_DATA,
           payload: user.data,
         });
       } else {
-        dispatch(getUserDataFail(user.data));
+        dispatch({
+          type: actionTypes.GET_USER_DATA_FAIL,
+          payload: user.data,
+        });
       }
     });
 };
 
-export const btnClicked = () => {
-  return {
-    type: "CLICK_LOGIN_BTN",
-  };
-};
-
-export const getUserDataFail = (url) => (dispatch) => {
-  dispatch({
-    type: "GET_USER_DATA_FAIL",
-    payload: url,
-  });
-};
-
-export const searchText = (text, token) => (dispatch) => {
+// GET ALL SUBREDDITS FROM YOUR STACK
+export const getSubReddits = (token) => (dispatch) => {
   axios
-    .get(`api/search-subreddits?text=${text}`, {
+    .get("/api/subreddits", {
       headers: {
         Accept: "application/json",
         "Content-type": "application/json",
@@ -56,18 +51,57 @@ export const searchText = (text, token) => (dispatch) => {
     })
     .then((resp) =>
       dispatch({
-        type: "SEARCH_TEXT",
+        type: actionTypes.GET_SUBREDDITS,
         payload: {
-          data: resp.data,
-          searchTerm: text,
+          subreddits: resp.data,
           totalResults: resp.data.count,
-          next: resp.data.next,
-          previous: resp.data.previous,
         },
       })
-    );
+    )
+    .catch((err) => console.log(err.message));
 };
 
+// GET CHANGES FROM REDDIT.COM
+export const refreshSubreddits = (token) => (dispatch) => {
+  axios
+    .get("api/refresh-subreddits", {
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: token,
+      },
+    })
+    .then(() => dispatch({ type: actionTypes.REFRESH_SUBREDDITS }))
+    .catch((err) => console.log(err.message));
+};
+
+// SEARCH SUBREDDIT
+export const searchText = (text, token) => (dispatch) => {
+  if (text !== "") {
+    axios
+      .get(`api/search-subreddits?text=${text}`, {
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+          Authorization: token,
+        },
+      })
+      .then((resp) =>
+        dispatch({
+          type: actionTypes.SEARCH_TEXT,
+          payload: {
+            data: resp.data,
+            searchTerm: text,
+            totalResults: resp.data.count,
+            next: resp.data.next,
+            previous: resp.data.previous,
+          },
+        })
+      );
+  }
+};
+
+// PAGINATION
 export const pagination = (url, token, searchTerm, currentPage = 1) => (
   dispatch
 ) => {
@@ -84,7 +118,7 @@ export const pagination = (url, token, searchTerm, currentPage = 1) => (
       })
       .then((resp) =>
         dispatch({
-          type: "PAGINATION",
+          type: actionTypes.PAGINATION,
           payload: {
             next: resp.data.next,
             previous: resp.data.previous,
@@ -104,7 +138,7 @@ export const pagination = (url, token, searchTerm, currentPage = 1) => (
       })
       .then((resp) =>
         dispatch({
-          type: "PAGINATION",
+          type: actionTypes.PAGINATION,
           payload: {
             next: resp.data.next,
             previous: resp.data.previous,
@@ -115,6 +149,8 @@ export const pagination = (url, token, searchTerm, currentPage = 1) => (
       );
   }
 };
+
+// SUBREDDIT LIST PAGINATION
 export const subredditsListPagination = (
   url,
   token,
@@ -134,7 +170,7 @@ export const subredditsListPagination = (
       })
       .then((resp) =>
         dispatch({
-          type: "LIST_PAGINATION",
+          type: actionTypes.LIST_PAGINATION,
           payload: {
             next: resp.data.next,
             previous: resp.data.previous,
@@ -157,7 +193,7 @@ export const subredditsListPagination = (
       })
       .then((resp) =>
         dispatch({
-          type: "LIST_PAGINATION",
+          type: actionTypes.LIST_PAGINATION,
           payload: {
             next: resp.data.next,
             previous: resp.data.previous,
@@ -169,11 +205,8 @@ export const subredditsListPagination = (
   }
 };
 
+// ADD SUBREDDIT
 export const addSubreddit = (id, token) => (dispatch) => {
-  dispatch({
-    type: "LOADING",
-  });
-
   fetch("api/subreddits", {
     method: "POST",
     body: JSON.stringify({
@@ -188,7 +221,7 @@ export const addSubreddit = (id, token) => (dispatch) => {
     .then((resp) => resp.json())
     .then((resp) => {
       dispatch({
-        type: "ADD_SUBREDDIT",
+        type: actionTypes.ADD_SUBREDDIT,
         payload: {
           subreddit_id: id,
         },
@@ -196,9 +229,9 @@ export const addSubreddit = (id, token) => (dispatch) => {
       dispatch(getSubReddits(token));
     })
     .catch((err) => console.log(err.message));
-  dispatch({ type: "LOADED" });
 };
 
+// REMOVE SUBREDDIT
 export const removeSubreddit = (id, token) => (dispatch) => {
   fetch(`api/subreddits/${id}`, {
     method: "DELETE",
@@ -214,44 +247,11 @@ export const removeSubreddit = (id, token) => (dispatch) => {
     .then((resp) => resp.json())
     .then((resp) => {
       dispatch({
-        type: "REMOVE_SUBREDDIT",
+        type: actionTypes.REMOVE_SUBREDDIT,
         payload: {
           subreddit_id: id,
         },
       });
-
-      dispatch(getSubReddits(token));
     })
-    .catch((err) => console.log(err.message));
-};
-
-export const getSubReddits = (token) => (dispatch) => {
-  axios
-    .get("/api/subreddits", {
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-        Authorization: token,
-      },
-    })
-    .then((resp) =>
-      dispatch({
-        type: "GET_SUBREDDITS",
-        payload: {
-          subreddits: resp.data,
-          totalResults: resp.data.count,
-        },
-      })
-    );
-
-  axios
-    .get("api/refresh-subreddits", {
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-        Authorization: token,
-      },
-    })
-    .then((resp) => dispatch({ type: "REFRESH_SUBREDDITS" }))
     .catch((err) => console.log(err.message));
 };

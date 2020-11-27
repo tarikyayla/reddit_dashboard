@@ -2,10 +2,6 @@ import axios from "axios";
 import * as actionTypes from "./actionTypes";
 
 export const getDcServers = (token) => (dispatch) => {
-  dispatch({
-    type: actionTypes.GET_REQ,
-  });
-
   axios
     .get("/api/discord", {
       headers: {
@@ -23,14 +19,7 @@ export const getDcServers = (token) => (dispatch) => {
         },
       })
     )
-    .catch((err) =>
-      dispatch({
-        type: actionTypes.GET_REQ_FAIL,
-        payload: {
-          msg: err.message,
-        },
-      })
-    );
+    .catch((err) => console.log(err.message));
 };
 
 export const createTextChannel = (slug, channel_id, discord_id, token) => (
@@ -133,7 +122,7 @@ export const searchFollowingSubreddits = (searchTerm, token) => (dispatch) => {
     })
     .then((resp) =>
       dispatch({
-        type: "SEARCH_FOLLOWING_LIST",
+        type: actionTypes.SEARCH_FOLLOWING_LIST,
         payload: {
           data: resp.data,
         },

@@ -21,15 +21,15 @@ const RedditLoginPage = ({ isRedditAuthActive, url }) => {
   return (
     <div className="redirect_page">
       <Grid textAlign="center" verticalAlign="middle">
-        {" "}
         <Grid.Column>
-          {" "}
           <Header as="h2" color="grey" textAlign="center">
-            <Icon name="reddit" /> Log-in to your account
+            <Icon name="reddit" />
+            Log-in to your account
           </Header>
           <Divider />
           <Form>
             <Segment raised inverted>
+              {/* LOGIN BUTTON */}
               <Button
                 onClick={redditButton}
                 basic
@@ -49,11 +49,7 @@ const RedditLoginPage = ({ isRedditAuthActive, url }) => {
 
 const mapStateToProps = (state) => {
   return {
-    token: state.test.token,
-    headers: state.test.headers,
-    user: state.test.user,
     redirect_link: state.test.redditAuth.redirect_link,
-    isRedditAuthActive: state.test.redditAuth.active,
     url: state.test.redditAuth.redirect_link,
   };
 };

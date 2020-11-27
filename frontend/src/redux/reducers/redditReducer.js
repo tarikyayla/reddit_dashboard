@@ -1,17 +1,12 @@
+import * as actionTypes from "../actions/actionTypes";
+
 const initialState = {
-  redditLoginBtn: false,
   isLoading: false,
   getListOfSubReddits: false,
   token: null,
 
-  headers: {
-    Accept: "application/json",
-    "Content-type": "application/json",
-    Authorization: null,
-  },
-
   user: null,
-
+  added: false,
   redditAuth: {
     active: false,
     username: null,
@@ -38,24 +33,21 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
-  if (action.type === "GET_TOKEN") {
+  if (action.type === actionTypes.GET_TOKEN) {
     return {
       ...state,
       token: action.payload,
-      headers: {
-        ...state.headers,
-        Authorization: action.payload,
-      },
     };
   }
 
-  if (action.type === "FETCH_USER_AUTH") {
+  if (action.type === actionTypes.FETCH_USER_AUTH) {
     return {
       ...state,
       user: action.payload,
     };
   }
-  if (action.type === "GET_USER_DATA") {
+
+  if (action.type === actionTypes.GET_USER_DATA) {
     return {
       ...state,
       redditAuth: {
@@ -67,14 +59,7 @@ export default function (state = initialState, action) {
     };
   }
 
-  if (action.type === "CLICK_LOGIN_BTN") {
-    return {
-      ...state,
-      redditLoginBtn: true,
-    };
-  }
-
-  if (action.type === "GET_USER_DATA_FAIL") {
+  if (action.type === actionTypes.GET_USER_DATA_FAIL) {
     return {
       ...state,
       redditAuth: {
@@ -87,7 +72,7 @@ export default function (state = initialState, action) {
     };
   }
 
-  if (action.type === "GET_SUBREDDITS") {
+  if (action.type === actionTypes.GET_SUBREDDITS) {
     return {
       ...state,
       subreddits: action.payload.subreddits,
@@ -96,7 +81,11 @@ export default function (state = initialState, action) {
     };
   }
 
-  if (action.type === "SEARCH_TEXT") {
+  if (action.type === actionTypes.REFRESH_SUBREDDITS) {
+    return state;
+  }
+
+  if (action.type === actionTypes.SEARCH_TEXT) {
     return {
       ...state,
       totalResults: action.payload.totalResults,
@@ -110,7 +99,7 @@ export default function (state = initialState, action) {
     };
   }
 
-  if (action.type === "PAGINATION") {
+  if (action.type === actionTypes.PAGINATION) {
     return {
       ...state,
       currentPage: action.payload.currentPage,
@@ -123,7 +112,7 @@ export default function (state = initialState, action) {
     };
   }
 
-  if (action.type === "LIST_PAGINATION") {
+  if (action.type === actionTypes.LIST_PAGINATION) {
     return {
       ...state,
       currentPageForList: action.payload.currentPage,
@@ -136,29 +125,18 @@ export default function (state = initialState, action) {
     };
   }
 
-  if (action.type === "ADD_SUBREDDIT") {
-    return state;
-  }
-  if (action.type === "REMOVE_SUBREDDIT") {
-    return state;
-  }
-  if (action.type === "LOADING") {
+  if (action.type === actionTypes.ADD_SUBREDDIT) {
     return {
       ...state,
-      isLoading: true,
+      added: true,
     };
   }
-  if (action.type === "LOADED") {
+  if (action.type === actionTypes.REMOVE_SUBREDDIT) {
     return {
       ...state,
-      isLoading: false,
+      added: false,
     };
   }
 
-  if (action.type === "REFRESH_SUBREDDITS") {
-    return {
-      ...state,
-    };
-  }
   return state;
 }

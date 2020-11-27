@@ -8,6 +8,7 @@ import {
   Label,
   List,
   Pagination,
+  Popup,
   Segment,
 } from "semantic-ui-react";
 import {
@@ -22,7 +23,6 @@ import { useAlert } from "react-alert";
 
 const SubList = ({
   subreddits,
-  getDcServers,
   token,
   removeSubreddit,
   totalResults,
@@ -32,9 +32,6 @@ const SubList = ({
   currentPage,
 }) => {
   const alert = useAlert();
-  React.useEffect(() => {
-    getDcServers(token);
-  }, [getDcServers, token]);
 
   const handlePagination = (e) => {
     let number = Number(e.target.text);
@@ -55,14 +52,15 @@ const SubList = ({
     }
   };
 
-  const handleDeleteSubReddit = (id) => {
+  const handleDeleteSubReddit = (id, name) => {
     removeSubreddit(id, token);
-    alert.error("Subreddit deleted!");
+
+    alert.error(`${name} deleted !`);
   };
 
   return (
     <Segment inverted padded="very">
-      <Header as="h2">
+      <Header color="grey" as="h2">
         Subreddits <Label color="grey">{subreddits.count}</Label>
       </Header>
       <Divider />
@@ -70,14 +68,21 @@ const SubList = ({
         {subreddits.results.map((subreddit) => (
           <List.Item key={subreddit.id}>
             <List.Content floated="right">
-              <Button
-                onClick={() => handleDeleteSubReddit(subreddit.id)}
-                color="red"
-                basic
-                size="tiny"
-              >
-                Delete
-              </Button>
+              <Popup
+                content="Refresh stack after delete an action !"
+                trigger={
+                  <Button
+                    onClick={() =>
+                      handleDeleteSubReddit(subreddit.id, subreddit.name)
+                    }
+                    color="red"
+                    basic
+                    size="tiny"
+                  >
+                    Delete
+                  </Button>
+                }
+              />
             </List.Content>
             <List.Content floated="right">
               {subreddit.over18 ? <Label color="red">+18</Label> : null}
@@ -99,6 +104,7 @@ const SubList = ({
           </List.Item>
         ))}
       </List>
+      {/* PAGINATON OF SUBLIST */}
       <Pagination
         defaultActivePage={1}
         firstItem={null}
