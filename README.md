@@ -4,7 +4,7 @@
 
 ## What is that ?
 
-Follow your subreddits from discord channel.
+This is an discord bot that you can easily manage with react web application. Add bot to your discord, follow subreddits and let the celery-worker do his job. You can easily modify [/reddit_dashboard/tasks.py](https://github.com/tarikyayla/reddit_dashboard/blob/master/reddit_dashboard/tasks.py) to change task schedule.
 
 
 
@@ -47,7 +47,7 @@ docker-compose up --build
 1. Clone the repo
 2. Change setting files. (/reddit_dashboard/settings.py) 
 3. Run
-
+4. (Optional) Change 
 ```
 pip install virtualenv --user
 virtualenv venv
